@@ -24,7 +24,7 @@ async function register(req, res) {
         const email = req.body.email;
         const password = req.body.password;
         if (!email.includes('@') || !email.includes('.') || password.length < 6) {
-            return res.status(400).json({ message: 'Validation error' });
+            return res.status(500).json({ message: 'Validation error' });
         } else {
             const hashedPassword = await bcrypt.hash(password, saltRounds);
 
