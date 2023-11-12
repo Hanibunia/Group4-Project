@@ -11,7 +11,10 @@ app.use(express.static("./public"));
 
 
 const { register } = require('./utils/UserUtil')
+const { addReview  } = require('./utils/ReviewUtil')
+
 app.post('/register', register);
+app.post('/addReview', addReview); // Endpoint for adding reviews
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/public/" + startPage);
