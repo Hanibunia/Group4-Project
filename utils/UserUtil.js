@@ -26,19 +26,28 @@ async function register(req, res) {
         if (!email.includes('@') || !email.includes('.') || password.length < 6) {
             return res.status(500).json({ message: 'Validation error' });
         } else {
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
+            const existingUsers = await readJSON('utils/users.json');
 
-            // Store the hashed password in the User object
-            const newUser = new User(email, hashedPassword);
+            // Check if the email already exists in the list of users
+            const userExists = existingUsers.some(user => user.email === email);
+            if (userExists) {
+                return res.status(400).json({ message: 'Email already exists' });
+            } else {
+                const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-            // Write the newUser object with the hashed password to the JSON data store
-            const updatedUsers = await writeJSON(newUser, 'utils/users.json');
-            return res.status(201).json(updatedUsers);
+                // Store the hashed password in the User object
+                const newUser = new User(email, hashedPassword);
+
+                // Write the newUser object with the hashed password to the JSON data store
+                const updatedUsers = await writeJSON(newUser, 'utils/users.json');
+                return res.status(201).json(updatedUsers);
+            }
         }
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 }
+
 
 module.exports = {
     readJSON, writeJSON, register
