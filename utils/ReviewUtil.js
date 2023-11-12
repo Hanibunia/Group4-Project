@@ -22,40 +22,41 @@ async function writeJSON(object, filename) {
     } catch (err) { console.error(err); throw err; }
 }
 
+
+
+
 async function addReview(req, res) {
     try {
         const userEmail = req.body.userEmail;
         const { reviewText, rating } = req.body;
 
-        const review = { userEmail, reviewText, rating }; // Creating review object
+        // Enhanced input validation
+        if (!userEmail || !reviewText || !rating) {
+            return res.status(400).json({ message: 'Invalid data: Missing fields' });
+        }
 
         const allUsers = await readJSON('utils/users.json');
-        console.log("All Users:", allUsers);
+        const userExists = allUsers.some(user => user.email === userEmail);
 
-        const user = allUsers.find(user => user.email === userEmail);
+        if (userExists) {
+            const review = { userEmail, reviewText, rating };
+            const allReviews = await readJSON('utils/reviews.json');
+            allReviews.push(review);
 
-        if (user) {
-            if (!user.reviews) {
-                user.reviews = []; // Create reviews array if it doesn't exist
-            }
-            user.reviews.push(review);
+            await fs.writeFile('utils/reviews.json', JSON.stringify(allReviews), 'utf8');
 
-            // Transforming the data to contain only necessary fields
-            const reviewsData = user.reviews.map(review => ({
-                userEmail: review.userEmail,
-                reviewText: review.reviewText,
-                rating: review.rating
-            }));
-
-            await fs.writeFile('utils/reviews.json', JSON.stringify(reviewsData), 'utf8');
-            res.status(201).json(reviewsData); // Sending back the modified reviews data
+            res.status(201).json(allReviews.filter(entry => entry.userEmail === userEmail));
         } else {
             res.status(404).json({ message: 'User not found' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('An error occurred:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+console.log("test")
+
 
 
 
