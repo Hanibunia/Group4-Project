@@ -11,12 +11,13 @@ app.use(express.static("./public"));
 
 
 const { register } = require('./utils/UserUtil')
-const { addReview, viewReview , viewAllReviews } = require('./utils/ReviewUtil')
+const { addReview, viewReview , viewAllReviews, updateReview } = require('./utils/ReviewUtil')
 
 app.post('/register', register);
 app.post('/addReview', addReview); // Endpoint for adding reviews
 app.get('/viewReview/:userEmail', viewReview); // Endpoint for viewing reviews
 app.get('/viewAllReviews', viewAllReviews);
+app.put('/updateReview', updateReview);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/public/" + startPage);
