@@ -45,7 +45,7 @@ async function register(req, res) {
         const updatedUsers = await writeJSON(newUser, 'utils/users.json');
 
         // Log the updated users for debugging
-        console.log('Updated Users:', updatedUsers);
+        //console.log('Updated Users:', updatedUsers);
 
         return res.status(201).json(updatedUsers);
     } catch (error) {
