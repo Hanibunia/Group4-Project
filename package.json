@@ -8,9 +8,11 @@
       "utils/UserUtil.js",
       "utils/ReviewUtil.js"
     ],
-    "exclude": [],
+    "exclude": [
+      "**/*.spec.js" 
+    ],
     "reporter": [
-      "text-summary"
+      "html"
     ],
     "all": true,
     "check-coverage": true,

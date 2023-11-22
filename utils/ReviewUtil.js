@@ -13,7 +13,7 @@ async function readJSON(filename) {
         throw err;
     }
 }
-
+// @ignore-class-method writeJSON
 async function writeJSON(object, filename) {
     try {
         const allObjects = await readJSON(filename);
@@ -22,6 +22,7 @@ async function writeJSON(object, filename) {
         return allObjects;
     } catch (err) { console.error(err); throw err; }
 }
+
 
 // async function viewReview(req, res) {
 //     try {
@@ -71,8 +72,9 @@ async function addReview(req, res) {
         const { reviewText, rating } = req.body;
 
         // Enhanced input validation
-        if (!email || !reviewText || isNaN(rating)) {
-            return res.status(400).json({ message: 'Invalid data: Missing fields' });
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email) || isNaN(rating) || rating < 1 || rating > 5 || !reviewText || reviewText.length > 500) {
+            return res.status(400).json({ message: 'Invalid data: Invalid email format or missing fields' });
         }
 
         const allUsers = await readJSON('utils/users.json');
@@ -84,7 +86,8 @@ async function addReview(req, res) {
             const allReviews = await readJSON('utils/reviews.json');
             allReviews.push(review);
 
-            await fs.writeFile('utils/reviews.json', JSON.stringify(allReviews), 'utf8');
+            // Use writeJSON to update the 'utils/reviews.json' file
+            await writeJSON(allReviews, 'utils/reviews.json');
 
             res.status(201).json(allReviews.filter(entry => entry.email === email));
         } else {
@@ -96,13 +99,15 @@ async function addReview(req, res) {
     }
 }
 
+
 async function updateReview(req, res) {
     try {
         const email = req.body.email;
         const { reviewId, reviewText, rating } = req.body;
 
         // Enhanced input validation
-        if (!email || !reviewId || !reviewText || isNaN(rating)) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !reviewId || !emailRegex.test(email) || isNaN(rating) || rating < 1 || rating > 5 || reviewText.length > 500) {
             return res.status(400).json({ message: 'Invalid data: Missing fields' });
         }
 
