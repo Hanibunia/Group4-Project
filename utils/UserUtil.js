@@ -33,6 +33,7 @@ async function register(req, res) {
         // Check if the email already exists in the list of users
         const userExists = existingUsers.some(user => user.email === email);
         if (userExists) {
+            
             return res.status(400).json({ message: 'Email already exists' });
         }
 
@@ -50,7 +51,7 @@ async function register(req, res) {
         return res.status(201).json(updatedUsers);
     } catch (error) {
         // Log the error for debugging
-        console.error('Error:', error);
+        // console.error('Error in register function:', error);
 
         return res.status(500).json({ message: error.message });
     }
