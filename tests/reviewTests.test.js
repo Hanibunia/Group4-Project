@@ -4,7 +4,6 @@ const fs = require('fs').promises;
 const sinon = require('sinon');
 const { addReview, updateReview } = require('../utils/ReviewUtil');
 
-describe('Add Review Function', () => {
     describe('addReview', () => {
         const usersFilePath = 'utils/users.json';
         let orgContent = [];
@@ -26,7 +25,7 @@ describe('Add Review Function', () => {
         const addReviewTestCases = [
             {
                 name: 'Should register a new review successfully using an existing email',
-                userEmail: 'abc@gmail.com',
+                email: 'abc@gmail.com',
                 reviewText: 'Great product!',
                 rating: 5,
                 expectedStatus: 201,
@@ -34,13 +33,28 @@ describe('Add Review Function', () => {
             },
             {
                 name: 'Should fail if user email does not exist',
-                userEmail: 'nonexistent@gmail.com',
+                email: 'nonexistent@gmail.com',
                 reviewText: 'Bad product!',
                 rating: 1,
                 expectedStatus: 404,
                 expectedMessage: { message: 'User not found' },
             },
-            // Add more test cases as needed
+            {
+                name: 'Should fail if reviewText is empty',
+                email: 'abc@gmail.com',
+                reviewText: '',
+                rating: 3,
+                expectedStatus: 400,
+                expectedMessage: { message: 'Invalid data: Missing fields' },
+            },
+            {
+                name: 'Should fail if rating is not a number',
+                email: 'abc@gmail.com',
+                reviewText: 'Great product!',
+                rating: 'not a number',
+                expectedStatus: 400,
+                expectedMessage: { message: 'Invalid data: Missing fields' },
+            },
         ];
 
         addReviewTestCases.forEach((testCase) => {
@@ -48,7 +62,7 @@ describe('Add Review Function', () => {
                 // Mock request and response objects
                 const req = {
                     body: {
-                        userEmail: testCase.userEmail,
+                        email: testCase.email,
                         reviewText: testCase.reviewText,
                         rating: testCase.rating,
                     },
@@ -100,13 +114,13 @@ describe('Add Review Function', () => {
         const updateReviewTestCases = [
             {
                 name: 'Should update a review successfully',
-                userEmail: 'abc@gmail.com',
-                reviewId: '8b0ad59c-b41f-49d6-9a0d-5faaeccbdc87',
+                email: 'abc@gmail.com',
+                reviewId: '54eb0f57-cee6-4ec3-b0f3-a0d82559e283',
                 reviewText: 'Updated review text',
                 rating: 5,
                 expectedStatus: 200,
                 expectedResponse: {
-                    reviewId: '8b0ad59c-b41f-49d6-9a0d-5faaeccbdc87',
+                    reviewId: '54eb0f57-cee6-4ec3-b0f3-a0d82559e283',
                     email: 'abc@gmail.com',
                     reviewText: 'Updated review text',
                     rating: 5
@@ -114,14 +128,41 @@ describe('Add Review Function', () => {
             },
             {
                 name: 'Should fail if review is not found',
-                userEmail: 'nonexistent@example.com',
+                email: 'nonexistent@example.com',
                 reviewId: '456',
                 reviewText: 'Updated review text',
                 rating: 5,
                 expectedStatus: 404,
                 expectedMessage: { message: 'Review not found for the user' },
             },
-            // Add more test cases as needed
+            {
+                name: 'Should fail if reviewId is empty',
+                email: 'abc@gmail.com',
+                reviewId: '',
+                reviewText: 'Updated review text',
+                rating: 5,
+                expectedStatus: 400,
+                expectedMessage: { message: 'Invalid data: Missing fields' },
+            },
+            {
+                name: 'Should fail if rating is not a number (update)',
+                email: 'abc@gmail.com',
+                reviewId: '8b0ad59c-b41f-49d6-9a0d-5faaeccbdc87',
+                reviewText: 'Updated review text',
+                rating: 'not a number',
+                expectedStatus: 400,
+                expectedMessage: { message: 'Invalid data: Missing fields' },
+            },
+            {
+                name: 'Should fail if some fields are missing when updating a review',
+                email: 'abc@gmail.com',
+                reviewId: '8b0ad59c-b41f-49d6-9a0d-5faaeccbdc87',
+                // Omit either reviewText or rating or both
+                expectedStatus: 400,
+                expectedMessage: { message: 'Invalid data: Missing fields' },
+            }
+            
+            
         ];
     
         updateReviewTestCases.forEach((testCase) => {
@@ -129,7 +170,7 @@ describe('Add Review Function', () => {
                 // Mock request and response objects
                 const req = {
                     body: {
-                        userEmail: testCase.userEmail,
+                        email: testCase.email,
                         reviewId: testCase.reviewId,
                         reviewText: testCase.reviewText,
                         rating: testCase.rating,
@@ -160,4 +201,3 @@ describe('Add Review Function', () => {
             });
         });
     });
-});
