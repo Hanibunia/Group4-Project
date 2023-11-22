@@ -26,7 +26,7 @@ describe('Testing Register Function', () => {
     afterEach(async () => {
         // console.log('After test  1st:', orgContent);
         sinon.restore(); // Clean up the sinon mocks and stubs after each test
-        //await fs.writeFile(usersFilePath, JSON.stringify(orgContent), 'utf8');
+        await fs.writeFile(usersFilePath, JSON.stringify(orgContent), 'utf8');
     });
 
 
