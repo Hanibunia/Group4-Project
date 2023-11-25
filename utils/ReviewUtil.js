@@ -102,21 +102,26 @@ async function addReview(req, res) {
 
 async function updateReview(req, res) {
     try {
+        console.log('Before reading JSON file');
         const email = req.body.email;
         const { reviewId, reviewText, rating } = req.body;
 
         // Enhanced input validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !reviewId || !emailRegex.test(email) || isNaN(rating) || rating < 1 || rating > 5 || reviewText.length > 500) {
+            console.log('Invalid data: Missing fields');
             return res.status(400).json({ message: 'Invalid data: Missing fields' });
         }
 
         const allReviews = await readJSON('utils/reviews.json');
+        console.log('After reading JSON file', allReviews);
 
         // Find the index of the review to be updated based on user email and reviewId
         const reviewIndex = allReviews.findIndex(
             entry => entry.email === email && entry.reviewId === reviewId
         );
+        
+        console.log('Review index:', reviewIndex);
 
         // Check if the review is found
         if (reviewIndex !== -1) {
@@ -125,12 +130,12 @@ async function updateReview(req, res) {
             allReviews[reviewIndex].rating = rating;
 
             // Rewrite the updated data back to the JSON file
-            await fs.writeFile('utils/reviews.json', JSON.stringify(allReviews), 'utf8');
+            await fs.writeFile('utils/reviews.json', JSON.stringify(allReviews), 'utf-8');
+            console.log('After writing updated data to JSON file', allReviews);
 
             res.status(200).json(allReviews[reviewIndex]);
         } else {
             console.error('Review not found for the user');
-
             res.status(404).json({ message: 'Review not found for the user' });
         }
     } catch (error) {
@@ -138,51 +143,53 @@ async function updateReview(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-async function deleteReview(req, res) {
-    try {
-        const email = req.body.email;
-        const { reviewId } = req.body;
 
-        // Enhanced input validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email) || !reviewId) {
-            return res.status(400).json({ message: 'Invalid data: Invalid email format or missing fields' });
-        }
 
-        const allUsers = await readJSON('utils/users.json');
-        const userExists = allUsers.some(user => user.email === email);
+// async function deleteReview(req, res) {
+//     try {
+//         const email = req.body.email;
+//         const { reviewId } = req.body;
 
-        if (userExists) {
-            const allReviews = await readJSON('utils/reviews.json');
+//         // Enhanced input validation
+//         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//         if (!email || !emailRegex.test(email) || !reviewId) {
+//             return res.status(400).json({ message: 'Invalid data: Invalid email format or missing fields' });
+//         }
 
-            // Find the index of the review to be deleted based on user email and reviewId
-            const reviewIndex = allReviews.findIndex(
-                entry => entry.email === email && entry.reviewId === reviewId
-            );
+//         const allUsers = await readJSON('utils/users.json');
+//         const userExists = allUsers.some(user => user.email === email);
 
-            // Check if the review is found
-            if (reviewIndex !== -1) {
-                // Remove the review from the array
-                const deletedReview = allReviews.splice(reviewIndex, 1)[0];
+//         if (userExists) {
+//             const allReviews = await readJSON('utils/reviews.json');
 
-                // Rewrite the updated data back to the JSON file
-                await writeJSON(allReviews, 'utils/reviews.json');
+//             // Find the index of the review to be deleted based on user email and reviewId
+//             const reviewIndex = allReviews.findIndex(
+//                 entry => entry.email === email && entry.reviewId === reviewId
+//             );
 
-                res.status(200).json('Review has been successfully deleted');
-            } else {
-                res.status(404).json({ message: 'Review not found for the user' });
-            }
-        } else {
-            res.status(404).json({ message: 'User not found' });
-        }
-    } catch (error) {
-        console.error('An error occurred:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-}
+//             // Check if the review is found
+//             if (reviewIndex !== -1) {
+//                 // Remove the review from the array
+//                 const deletedReview = allReviews.splice(reviewIndex, 1)[0];
+
+//                 // Rewrite the updated data back to the JSON file
+//                 await writeJSON(allReviews, 'utils/reviews.json');
+
+//                 res.status(200).json('Review has been successfully deleted');
+//             } else {
+//                 res.status(404).json({ message: 'Review not found for the user' });
+//             }
+//         } else {
+//             res.status(404).json({ message: 'User not found' });
+//         }
+//     } catch (error) {
+//         console.error('An error occurred:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// }
 
 
 
 module.exports = {
-    readJSON, writeJSON, addReview, updateReview, deleteReview
+    readJSON, writeJSON, addReview, updateReview
 };
