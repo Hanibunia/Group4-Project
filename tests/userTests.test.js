@@ -3,7 +3,7 @@ const { expect, assert } = require('chai');  // Import assert from Chai
 const fs = require('fs').promises;
 const sinon = require('sinon'); // Import sinon
 const bcrypt = require('bcrypt'); // Import bcrypt
-const { register } = require('../utils/UserUtil');
+const { register, login } = require('../utils/UserUtil');
 const saltRounds = 10; // The number of salt rounds to use (higher is more secure but slower)
 
 //Stub a simple fake object help write test 
@@ -169,5 +169,49 @@ describe('Testing Register Function', () => {
             hashStub.restore();
             throw error;
         }
+    });
+});
+describe('Testing Login Function', () => {
+    const usersFilePath = 'utils/users.json';
+    var orgContent = "";
+    beforeEach(async () => {
+        orgContent = await fs.readFile(usersFilePath, 'utf8');
+        orgContent = JSON.parse(orgContent);
+    });
+    it('Should login successfully', async () => {
+        const req = {
+            body: {
+                email: orgContent[0].email,
+                password: orgContent[0].password,
+            },
+        };
+        const res = {
+            status: function (code) {
+                expect(code).to.equal(200);
+                return this;
+            },
+            json: function (data) {
+                expect(data.message).to.equal('Login successful!');
+            },
+        };
+        await login(req, res);
+    });
+    it('Should shows invalid credentials', async () => {
+        const req = {
+            body: {
+                email: orgContent[0].email,
+                password: 'abcdefg',
+            },
+        };
+        const res = {
+            status: function (code) {
+                expect(code).to.equal(500);
+                return this;
+            },
+            json: function (data) {
+                expect(data.message).to.equal('Invalid credentials!');
+            },
+        };
+        await login(req, res);
     });
 });
