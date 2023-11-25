@@ -138,9 +138,51 @@ async function updateReview(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+async function deleteReview(req, res) {
+    try {
+        const email = req.body.email;
+        const { reviewId } = req.body;
+
+        // Enhanced input validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email) || !reviewId) {
+            return res.status(400).json({ message: 'Invalid data: Invalid email format or missing fields' });
+        }
+
+        const allUsers = await readJSON('utils/users.json');
+        const userExists = allUsers.some(user => user.email === email);
+
+        if (userExists) {
+            const allReviews = await readJSON('utils/reviews.json');
+
+            // Find the index of the review to be deleted based on user email and reviewId
+            const reviewIndex = allReviews.findIndex(
+                entry => entry.email === email && entry.reviewId === reviewId
+            );
+
+            // Check if the review is found
+            if (reviewIndex !== -1) {
+                // Remove the review from the array
+                const deletedReview = allReviews.splice(reviewIndex, 1)[0];
+
+                // Rewrite the updated data back to the JSON file
+                await writeJSON(allReviews, 'utils/reviews.json');
+
+                res.status(200).json('Review has been successfully deleted');
+            } else {
+                res.status(404).json({ message: 'Review not found for the user' });
+            }
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 
 
 module.exports = {
-    readJSON, writeJSON, addReview, updateReview
+    readJSON, writeJSON, addReview, updateReview, deleteReview
 };
