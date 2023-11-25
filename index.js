@@ -18,7 +18,7 @@ app.post('/addReview', addReview); // Endpoint for adding reviews
 // app.get('/viewReview/:userEmail', viewReview); // Endpoint for viewing reviews
 // app.get('/viewAllReviews', viewAllReviews);
 app.put('/updateReview', updateReview);
-app.delete('/deleteReview', deleteReview);
+// app.delete('/deleteReview', deleteReview);
 
 app.post('/login', login);
 
