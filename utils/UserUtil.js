@@ -33,7 +33,7 @@ async function register(req, res) {
         // Check if the email already exists in the list of users
         const userExists = existingUsers.some(user => user.email === email);
         if (userExists) {
-            
+
             return res.status(400).json({ message: 'Email already exists' });
         }
 
@@ -56,8 +56,35 @@ async function register(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+async function login(req, res) {
+    try {
+        const userEmail = req.body.email;
+        const userPassword = req.body.password;
+
+        const allUsers = await readJSON('utils/users.json');
+        let validCredentials = false;
+
+        for (let i = 0; i < allUsers.length; i++) {
+            const currentUser = allUsers[i];
+
+            if (currentUser.email === userEmail && currentUser.password === userPassword) {
+                validCredentials = true;
+                break;
+            }
+        }
+
+        if (validCredentials) {
+            return res.status(200).json({ message: 'Login successful!' });
+        } else {
+            return res.status(500).json({ message: 'Invalid credentials!' });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 
 
 module.exports = {
-    readJSON, writeJSON, register
+    readJSON, writeJSON, register, login
 };
