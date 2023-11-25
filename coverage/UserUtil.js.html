@@ -23,30 +23,50 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
+
+                <span class="strong">89.36% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>42/47</span>
+
                 <span class="strong">59.57% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>28/47</span>
+
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">53.84% </span>
                 <span class="quiet">Branches</span>
+
+                <span class='fraction'>13/13</span>
+
                 <span class='fraction'>7/13</span>
+
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
+
+                <span class='fraction'>5/5</span>
+
                 <span class='fraction'>4/5</span>
+
             </div>
         
             
             <div class='fl pad1y space-right2'>
+
+                <span class="strong">93.02% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>40/43</span>
+
                 <span class="strong">62.79% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>27/43</span>
+
             </div>
         
             
@@ -158,9 +178,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -211,6 +231,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -231,6 +273,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -299,6 +342,29 @@ async function register(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+
+async function login(req, res) {
+    try {
+        const userEmail = req.body.email;
+        const userPassword = req.body.password;
+&nbsp;
+        const allUsers = await readJSON('utils/users.json');
+        let validCredentials = false;
+&nbsp;
+        for (let i = 0; i &lt; allUsers.length; i++) {
+            const currentUser = allUsers[i];
+&nbsp;
+            if (currentUser.email === userEmail &amp;&amp; currentUser.password === userPassword) {
+                validCredentials = true;
+                break;
+            }
+        }
+&nbsp;
+        if (validCredentials) {
+            return res.status(200).json({ message: 'Login successful!' });
+        } else {
+            return res.status(500).json({ message: 'Invalid credentials!' });
+
 async function <span class="fstat-no" title="function not covered" >login(</span>req, res) {
 <span class="cstat-no" title="statement not covered" >    try {</span>
         const userEmail = <span class="cstat-no" title="statement not covered" >req.body.email;</span>
@@ -320,6 +386,7 @@ async function <span class="fstat-no" title="function not covered" >login(</span
 <span class="cstat-no" title="statement not covered" >            return res.status(200).json({ message: 'Login successful!' });</span>
         } else {
 <span class="cstat-no" title="statement not covered" >            return res.status(500).json({ message: 'Invalid credentials!' });</span>
+
         }
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >        return res.status(500).json({ message: error.message });</span>
@@ -337,7 +404,11 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+
+                at 2023-11-25T16:06:55.556Z
+
                 at 2023-11-25T15:53:14.130Z
+
             </div>
         <script src="prettify.js"></script>
         <script>
