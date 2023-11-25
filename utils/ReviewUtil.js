@@ -13,14 +13,28 @@ async function readJSON(filename) {
         throw err;
     }
 }
-// @ignore-class-method writeJSON
 async function writeJSON(object, filename) {
     try {
         const allObjects = await readJSON(filename);
-        allObjects.push(object);
+
+        if (Array.isArray(object)) {
+            // If object is an array, filter out existing entries before concatenating
+            const uniqueObjects = object.filter(newEntry => !allObjects.some(existingEntry => existingEntry.reviewId === newEntry.reviewId));
+            allObjects.push(...uniqueObjects);
+        } else {
+            // If object is not an array, check if it already exists before pushing
+            const exists = allObjects.some(existingEntry => existingEntry.reviewId === object.reviewId);
+            if (!exists) {
+                allObjects.push(object);
+            }
+        }
+
         await fs.writeFile(filename, JSON.stringify(allObjects), 'utf8');
         return allObjects;
-    } catch (err) { console.error(err); throw err; }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
 }
 
 
@@ -84,12 +98,23 @@ async function addReview(req, res) {
             const reviewId = uuidv4(); // Generate a unique identifier
             const review = new Review(reviewId, email, reviewText, rating);
             const allReviews = await readJSON('utils/reviews.json');
-            allReviews.push(review);
 
-            // Use writeJSON to update the 'utils/reviews.json' file
-            await writeJSON(allReviews, 'utils/reviews.json');
+            // Check if a review with the same reviewId already exists
+            const existingReviewIndex = allReviews.findIndex(existingReview => existingReview.reviewId === reviewId);
 
-            res.status(201).json(allReviews.filter(entry => entry.email === email));
+            if (existingReviewIndex === -1) {
+                // Review with the same reviewId does not exist, add the new review
+                allReviews.push(review);
+
+                // Use writeJSON to update the 'utils/reviews.json' file
+                await writeJSON(allReviews, 'utils/reviews.json');
+
+                // Respond with an array containing only the newly added review
+                res.status(201).json([review]);
+            } else {
+                // Review with the same reviewId already exists, respond with an error
+                res.status(400).json({ message: 'Review with the same reviewId already exists' });
+            }
         } else {
             res.status(404).json({ message: 'User not found' });
         }
@@ -98,6 +123,7 @@ async function addReview(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
 
 
 async function updateReview(req, res) {

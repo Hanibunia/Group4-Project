@@ -18,7 +18,7 @@ describe('addReview', () => {
     });
 
     afterEach(async () => {
-        await fs.writeFile(usersFilePath, JSON.stringify(orgContent), 'utf8');
+         await fs.writeFile(usersFilePath, JSON.stringify(orgContent), 'utf8');
     });
 
     // Parameterized test cases for addReview
@@ -134,14 +134,14 @@ describe('Update Review Function', () => {
         {
             name: 'Should update a review successfully',
             email: 'abc@gmail.com',
-            reviewId: "dc6d5295-664f-488f-9c7b-64b395f1cccc",
-            reviewText: 'Updated review text',
+            reviewId: "07466bd9-648c-4967-82ba-3550c7577064",
+            reviewText: 'Test',
             rating: 5,
             expectedStatus: 200,
             expectedResponse: {
-                reviewId: "dc6d5295-664f-488f-9c7b-64b395f1cccc",
+                reviewId: "07466bd9-648c-4967-82ba-3550c7577064",
                 email: 'abc@gmail.com',
-                reviewText: 'Updated review text',
+                reviewText: 'Test',
                 rating: 5
             },
         },
