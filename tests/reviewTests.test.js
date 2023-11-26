@@ -76,41 +76,50 @@ describe('addReview', () => {
         },
     ];
 
-    addReviewTestCases.forEach((testCase) => {
-        it(testCase.name, async () => {
-            // Mock request and response objects
-            const req = {
-                body: {
-                    email: testCase.email,
-                    reviewText: testCase.reviewText,
-                    rating: testCase.rating,
-                },
-            };
-            const res = {
-                status: function (code) {
-                    expect(code).to.equal(testCase.expectedStatus);
-                    return this;
-                },
-                json: function (data) {
-                    if (typeof testCase.expectedMessage === 'string') {
-                        expect(data).to.be.an(testCase.expectedMessage);
-                    } else {
-                        expect(data).to.deep.equal(testCase.expectedMessage);
-                    }
-                },
-            };
+  // Loop through an array of test cases for the addReview function
+addReviewTestCases.forEach((testCase) => {
+    // Define a test case using the 'it' function
+    it(testCase.name, async () => {
+        // Mock request and response objects for testing purposes
+        const req = {
+            body: {
+                email: testCase.email,
+                reviewText: testCase.reviewText,
+                rating: testCase.rating,
+            },
+        };
 
-            try {
-                await addReview(req, res);
-            } catch (error) {
-                console.error('Error during test execution:', error);
-                throw error;
-            } finally {
-                sinon.restore();
-            }
-        });
+        const res = {
+            // Define a 'status' method on the response object to check the HTTP status code
+            status: function (code) {
+                expect(code).to.equal(testCase.expectedStatus);
+                return this;
+            },
+            // Define a 'json' method on the response object to check the JSON response
+            json: function (data) {
+                // Check if the expected message is a string
+                if (typeof testCase.expectedMessage === 'string') {
+                    expect(data).to.be.an(testCase.expectedMessage);
+                } else {
+                    expect(data).to.deep.equal(testCase.expectedMessage);
+                }
+            },
+        };
+
+        try {
+            // Call the addReview function with the mock request and response objects
+            await addReview(req, res);
+        } catch (error) {
+            console.error('Error during test execution:', error);
+            throw error;
+        } finally {
+            // Restore any sinon stubs or spies after the test is executed
+            sinon.restore();
+        }
     });
 });
+});
+
 
 describe('Update Review Function', () => {
     const reviewsFilePath = 'utils/reviews.json';
@@ -241,3 +250,4 @@ describe('Update Review Function', () => {
         });
     });
 });
+

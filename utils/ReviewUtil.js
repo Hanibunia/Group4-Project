@@ -128,19 +128,19 @@ async function addReview(req, res) {
 
 async function updateReview(req, res) {
     try {
-        console.log('Before reading JSON file');
+        // console.log('Before reading JSON file');
         const email = req.body.email;
         const { reviewId, reviewText, rating } = req.body;
 
         // Enhanced input validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !reviewId || !emailRegex.test(email) || isNaN(rating) || rating < 1 || rating > 5 || reviewText.length > 500) {
-            console.log('Invalid data: Missing fields');
+            // console.log('Invalid data: Missing fields');
             return res.status(400).json({ message: 'Invalid data: Missing fields' });
         }
 
         const allReviews = await readJSON('utils/reviews.json');
-        console.log('After reading JSON file', allReviews);
+        // console.log('After reading JSON file', allReviews);
 
         // Find the index of the review to be updated based on user email and reviewId
         const reviewIndex = allReviews.findIndex(
@@ -157,7 +157,7 @@ async function updateReview(req, res) {
 
             // Rewrite the updated data back to the JSON file
             await fs.writeFile('utils/reviews.json', JSON.stringify(allReviews), 'utf-8');
-            console.log('After writing updated data to JSON file', allReviews);
+            // console.log('After writing updated data to JSON file', allReviews);
 
             res.status(200).json(allReviews[reviewIndex]);
         } else {
