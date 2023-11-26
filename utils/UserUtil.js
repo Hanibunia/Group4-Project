@@ -82,22 +82,28 @@ async function register(req, res) {
     }
 }
 async function login(req, res) {
+    
     try {
+        //getting email and password
         const userEmail = req.body.email;
         const userPassword = req.body.password;
 
+        //reading of user data
         const allUsers = await readJSON('utils/users.json');
         let validCredentials = false;
 
+        //for loop all users to check
         for (let i = 0; i < allUsers.length; i++) {
             const currentUser = allUsers[i];
 
+            //check if user and password match
             if (currentUser.email === userEmail && currentUser.password === userPassword) {
                 validCredentials = true;
                 break;
             }
         }
 
+        //checking of results
         if (validCredentials) {
             return res.status(200).json({ message: 'Login successful!' });
         } else {
@@ -109,25 +115,25 @@ async function login(req, res) {
 }
 async function updateEmail(req, res) {
     try {
-        // Getting the old and new email
+        //getting current and new email
         const currentEmail = req.body.currentEmail;
         const newEmail = req.body.newEmail;
 
-        // Enhancing input validation
+        //enchancing input validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!currentEmail || !newEmail || !emailRegex.test(currentEmail) || !emailRegex.test(newEmail)) {
             return res.status(400).json({ message: 'Invalid data: Missing fields or invalid email format' });
         }
 
-        // Reading the file
+        //reading all user 
         const allUsers = await readJSON('utils/users.json');
 
-        // Finding user by email
+        //finding user's email
         const userToUpdate = allUsers.find(user => user.email === currentEmail);
 
-        // Checking if user exists
+        //checking if user exists
         if (userToUpdate) {
-            // Updating the email
+            //updating of email
             await writeUpdate({ currentEmail, newEmail }, 'utils/users.json');
 
             res.status(200).json({ message: 'Email updated successfully' });
