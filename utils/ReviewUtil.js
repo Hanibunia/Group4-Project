@@ -173,34 +173,37 @@ async function updateReview(req, res) {
 
 async function deleteReview(req, res) {
     try {
+        //getting email and id 
         const email = req.body.email;
         const { reviewId } = req.body;
 
-        // Enhanced input validation
+        //enhancing input validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !emailRegex.test(email) || !reviewId) {
             console.log('Invalid data: Invalid email format or missing fields');
             return res.status(400).json({ message: 'Invalid data: Invalid email format or missing fields' });
         }
 
+        //reading of user data
         const allUsers = await readJSON('utils/users.json');
+        //checkin for existing user
         const userExists = allUsers.some(user => user.email === email);
 
         if (userExists) {
             const allReviews = await readJSON('utils/reviews.json');
 
-            // Find the index of the review to be deleted based on user email and reviewId
+            //finding the index of the review that needs to be deleted
             const reviewIndex = allReviews.findIndex(
                 entry => entry.email === email && entry.reviewId === reviewId
             );
 
-            // Check if the review is found
+            //checking if review exist
             if (reviewIndex !== -1) {
-                // Remove the review from the array
+                //removing of review
                 const deletedReview = allReviews.splice(reviewIndex, 1)[0];
 
                 try {
-                    // Rewrite the updated data back to the JSON file
+                    //rewriting the updated data back to the JSON file
                     await fs.writeFile('utils/reviews.json', JSON.stringify(allReviews), 'utf-8');
                     console.log('Review has been successfully deleted:', deletedReview);
                     res.status(200).json({ message: 'Review has been successfully deleted' });
@@ -209,6 +212,7 @@ async function deleteReview(req, res) {
                     res.status(500).json({ message: 'Error updating data in the file' });
                 }
             } else {
+                //if review not found
                 console.log('Review not found for the user');
                 res.status(404).json({ message: 'Review not found for the user' });
             }
