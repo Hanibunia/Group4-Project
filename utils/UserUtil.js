@@ -82,9 +82,45 @@ async function login(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+async function updateEmail(req, res) {
+    try {
+        ////getting the old and new email
+        const currentEmail = req.body.currentEmail;
+        const newEmail = req.body.newEmail;
+
+        //enhancing input validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!currentEmail || !newEmail || !emailRegex.test(currentEmail) || !emailRegex.test(newEmail)) {
+            return res.status(400).json({ message: 'Invalid data: Missing fields or invalid email format' });
+        }
+        //reading of file
+        const allUsers = await readJSON('utils/users.json');
+
+        //finding user by email
+        const userIndex = allUsers.findIndex(user => user.email === currentEmail);
+
+        //checking for user
+        if (userIndex !== -1) {
+            //updating of user email
+            allUsers[userIndex].email = newEmail;
+
+            //rewriting of file
+            await writeJSON(allUsers, 'utils/users.json');
+
+            res.status(200).json({ message: 'Email updated successfully' });
+        } else {
+            console.error('User not found');
+
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 //test test
 //test test 2
 
 module.exports = {
-    readJSON, writeJSON, register, login
+    readJSON, writeJSON, register, login, updateEmail
 };

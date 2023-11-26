@@ -1,10 +1,14 @@
 const { describe, it, beforeEach, afterEach } = require('mocha');
 const { expect, assert } = require('chai');  // Import assert from Chai
 const fs = require('fs').promises;
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const { readJSON, writeJSON } = require('../utils/UserUtil');
 const sinon = require('sinon'); // Import sinon
 const bcrypt = require('bcrypt'); // Import bcrypt
-const { register, login } = require('../utils/UserUtil');
+const { register, login, updateEmail } = require('../utils/UserUtil');
 const saltRounds = 10; // The number of salt rounds to use (higher is more secure but slower)
+chai.use(chaiHttp);
 
 //Stub a simple fake object help write test 
 
@@ -213,5 +217,97 @@ describe('Testing Login Function', () => {
             },
         };
         await login(req, res);
+    });
+});
+describe('updateEmail', () => {
+    beforeEach(async () => {
+        // Create a test user and store it in the JSON file
+        const testUser = {
+            email: 'testuser@example.com',
+        };
+        await writeJSON([testUser], 'utils/users.json');
+    });
+
+    afterEach(async () => {
+        // Clean up the test data after each test
+        await writeJSON([], 'utils/users.json');
+    });
+
+    it('should update email for an existing user', async () => {
+        // Assuming user ID 1 exists and the current email is 'testuser@example.com'
+        const req = {
+            params: {
+                userId: 1,
+            },
+            body: {
+                currentEmail: 'unique_email_1700665706293@example.com',
+                newEmail: 'newemail@example.com',
+            },
+        };
+    
+        const res = {
+            status: function (code) {
+                this.statusCode = code;
+                return this;
+            },
+            json: function (data) {
+                this.body = data;
+                return this;
+            },
+        };
+    
+        await updateEmail(req, res);
+    
+        expect(res.statusCode).to.equal(200);
+        expect(res.body.message).to.equal('Email updated successfully');
+    });
+    it('should return a 404 status if the user is not found', async () => {
+        const req = {
+            body: {
+                currentEmail: 'nonexistentuser@example.com',
+                newEmail: 'newemail@example.com',
+            },
+        };
+
+        const res = {
+            status: function (code) {
+                this.statusCode = code;
+                return this;
+            },
+            json: function (data) {
+                this.body = data;
+                return this;
+            },
+        };
+
+        await updateEmail(req, res);
+
+        expect(res.statusCode).to.equal(404);
+        expect(res.body.message).to.equal('User not found');
+    });
+
+    it('should return a 400 status for invalid data', async () => {
+        const req = {
+            body: {
+                currentEmail: 'testuser@example.com',
+                newEmail: 'invalidemail',
+            },
+        };
+
+        const res = {
+            status: function (code) {
+                this.statusCode = code;
+                return this;
+            },
+            json: function (data) {
+                this.body = data;
+                return this;
+            },
+        };
+
+        await updateEmail(req, res);
+
+        expect(res.statusCode).to.equal(400);
+        expect(res.body.message).to.equal('Invalid data: Missing fields or invalid email format');
     });
 });

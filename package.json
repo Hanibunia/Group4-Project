@@ -9,7 +9,7 @@
       "utils/ReviewUtil.js"
     ],
     "exclude": [
-      "**/*.spec.js" 
+      "**/*.spec.js"
     ],
     "reporter": [
       "html"
@@ -30,6 +30,7 @@
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "chai": "^4.3.10",
+    "chai-http": "^4.4.0",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
     "joi": "^17.11.0",

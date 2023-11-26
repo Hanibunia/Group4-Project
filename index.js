@@ -10,13 +10,14 @@ app.use(bodyParser.json());
 app.use(express.static("./public"));
 
 
-const { register, login } = require('./utils/UserUtil')
+const { register, login, updateEmail } = require('./utils/UserUtil')
 const { addReview, viewReview , viewAllReviews, updateReview, deleteReview } = require('./utils/ReviewUtil')
 
 app.post('/register', register);
 app.post('/addReview', addReview); // Endpoint for adding reviews
 // app.get('/viewReview/:userEmail', viewReview); // Endpoint for viewing reviews
 // app.get('/viewAllReviews', viewAllReviews);
+app.put('/updateEmail', updateEmail);
 app.put('/updateReview', updateReview);
 // app.delete('/deleteReview', deleteReview);
 
