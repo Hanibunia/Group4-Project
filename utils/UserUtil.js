@@ -19,6 +19,31 @@ async function writeJSON(object, filename) {
     } catch (err) { console.error(err); throw err; }
 }
 
+async function writeUpdate(object, filename) {
+    try {
+        const allObjects = await readJSON(filename);
+
+        // Find the index of the object to update in the array
+        const indexToUpdate = allObjects.findIndex(existingObject => existingObject.email === object.currentEmail);
+
+        if (indexToUpdate !== -1) {
+            // Update the existing object
+            allObjects[indexToUpdate].email = object.newEmail || object.currentEmail; // Use newEmail if provided, otherwise use existing email
+        } else {
+            console.error('User not found');
+            throw new Error('User not found');
+        }
+
+        // Write the updated data back to the JSON file
+        await fs.writeFile(filename, JSON.stringify(allObjects), 'utf8');
+        return allObjects;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+
 
 async function register(req, res) {
     try {
@@ -84,33 +109,30 @@ async function login(req, res) {
 }
 async function updateEmail(req, res) {
     try {
-        ////getting the old and new email
+        // Getting the old and new email
         const currentEmail = req.body.currentEmail;
         const newEmail = req.body.newEmail;
 
-        //enhancing input validation
+        // Enhancing input validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!currentEmail || !newEmail || !emailRegex.test(currentEmail) || !emailRegex.test(newEmail)) {
             return res.status(400).json({ message: 'Invalid data: Missing fields or invalid email format' });
         }
-        //reading of file
+
+        // Reading the file
         const allUsers = await readJSON('utils/users.json');
 
-        //finding user by email
-        const userIndex = allUsers.findIndex(user => user.email === currentEmail);
+        // Finding user by email
+        const userToUpdate = allUsers.find(user => user.email === currentEmail);
 
-        //checking for user
-        if (userIndex !== -1) {
-            //updating of user email
-            allUsers[userIndex].email = newEmail;
-
-            //rewriting of file
-            await writeJSON(allUsers, 'utils/users.json');
+        // Checking if user exists
+        if (userToUpdate) {
+            // Updating the email
+            await writeUpdate({ currentEmail, newEmail }, 'utils/users.json');
 
             res.status(200).json({ message: 'Email updated successfully' });
         } else {
             console.error('User not found');
-
             res.status(404).json({ message: 'User not found' });
         }
     } catch (error) {
@@ -118,8 +140,7 @@ async function updateEmail(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-//test test
-//test test 2
+
 
 module.exports = {
     readJSON, writeJSON, register, login, updateEmail
