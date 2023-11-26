@@ -220,17 +220,23 @@ describe('Testing Login Function', () => {
     });
 });
 describe('updateEmail', () => {
+    const usersFilePath = 'utils/users.json';
+
     beforeEach(async () => {
-        // Create a test user and store it in the JSON file
-        const testUser = {
-            email: 'testuser@example.com',
-        };
-        await writeJSON([testUser], 'utils/users.json');
+        try {
+            orgContent = await fs.readFile(usersFilePath, 'utf8');
+            orgContent = JSON.parse(orgContent);
+            //console.log('Before test 1st:', orgContent);
+        } catch (error) {
+            console.error('Error reading or parsing users file:', error);
+            // You might want to throw the error or handle it appropriately based on your needs
+        }
     });
+    
 
     afterEach(async () => {
         // Clean up the test data after each test
-        await writeJSON([], 'utils/users.json');
+         await fs.writeFile(usersFilePath, JSON.stringify(orgContent), 'utf8');
     });
 
     it('should update email for an existing user', async () => {
@@ -240,8 +246,8 @@ describe('updateEmail', () => {
                 userId: 1,
             },
             body: {
-                currentEmail: 'unique_email_1700665706293@example.com',
-                newEmail: 'newemail@example.com',
+                currentEmail: 'hey@example.com',
+                newEmail: 'bye@example.com',
             },
         };
     
