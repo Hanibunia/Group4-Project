@@ -179,6 +179,7 @@ async function deleteReview(req, res) {
         // Enhanced input validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !emailRegex.test(email) || !reviewId) {
+            console.log('Invalid data: Invalid email format or missing fields');
             return res.status(400).json({ message: 'Invalid data: Invalid email format or missing fields' });
         }
 
@@ -198,14 +199,21 @@ async function deleteReview(req, res) {
                 // Remove the review from the array
                 const deletedReview = allReviews.splice(reviewIndex, 1)[0];
 
-                // Rewrite the updated data back to the JSON file
-                await writeJSON(allReviews, 'utils/reviews.json');
-
-                res.status(200).json('Review has been successfully deleted');
+                try {
+                    // Rewrite the updated data back to the JSON file
+                    await fs.writeFile('utils/reviews.json', JSON.stringify(allReviews), 'utf-8');
+                    console.log('Review has been successfully deleted:', deletedReview);
+                    res.status(200).json({ message: 'Review has been successfully deleted' });
+                } catch (writeError) {
+                    console.error('Error writing to file:', writeError);
+                    res.status(500).json({ message: 'Error updating data in the file' });
+                }
             } else {
+                console.log('Review not found for the user');
                 res.status(404).json({ message: 'Review not found for the user' });
             }
         } else {
+            console.log('User not found');
             res.status(404).json({ message: 'User not found' });
         }
     } catch (error) {
@@ -215,7 +223,6 @@ async function deleteReview(req, res) {
 }
 
 
-
 module.exports = {
-    readJSON, writeJSON, addReview, updateReview
+    readJSON, writeJSON, addReview, updateReview, deleteReview
 };
