@@ -34,7 +34,7 @@ describe('deleteReview', () => {
             const req = {
                 body: {
                     email: 'abc@gmail.com',
-                    reviewId: '7d1ff924-3d62-42d5-a27f-d42119659ce5',
+                    reviewId: '226fd52f-dfce-4414-9ef7-31d8dde514e8',
                 },
             };
 

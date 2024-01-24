@@ -2,7 +2,7 @@ const { describe, it, beforeEach, afterEach } = require('mocha');
 const { expect } = require('chai');
 const fs = require('fs').promises;
 const sinon = require('sinon');
-const { addReview, updateReview } = require('../utils/ReviewUtil');
+const { addReview, updateReview , viewReview ,viewReviewbyRestaurant,viewAllReviews } = require('../utils/ReviewUtil');
 
 describe('addReview', () => {
     const usersFilePath = 'utils/users.json';
@@ -29,6 +29,7 @@ describe('addReview', () => {
             email: 'abc@gmail.com',
             reviewText: 'Great product!',
             rating: 5,
+            restaurantId: 1,
             expectedStatus: 201,
             expectedMessage: 'array',
         },
@@ -37,8 +38,9 @@ describe('addReview', () => {
             email: 'invalid_email_format',  // Invalid email format
             reviewText: 'Some review text',
             rating: 3,
+            restaurantId: 1,
             expectedStatus: 400,
-            expectedMessage: { message: 'Invalid data: Invalid email format or missing fields' },
+            expectedMessage: { message: 'Invalid data: Invalid email format, missing fields, or invalid restaurantId' },
         }
         ,
         {
@@ -46,24 +48,30 @@ describe('addReview', () => {
             email: 'nonexistent@gmail.com',
             reviewText: 'Bad product!',
             rating: 1,
+            restaurantId: 1,
+
             expectedStatus: 404,
-            expectedMessage: { message: 'User not found' },
+            expectedMessage: { message: 'User not found or Restaurant not found' },
         },
         {
             name: 'Should fail if reviewText is empty',
             email: 'abc@gmail.com',
             reviewText: '',
             rating: 3,
+            restaurantId: 1,
+
             expectedStatus: 400,
-            expectedMessage: { message: 'Invalid data: Invalid email format or missing fields' },
+            expectedMessage: { message: 'Invalid data: Invalid email format, missing fields, or invalid restaurantId' },
         },
         {
             name: 'Should fail if rating is not a number',
             email: 'abc@gmail.com',
             reviewText: 'Great product!',
             rating: 'not a number',
+            restaurantId: 1,
+
             expectedStatus: 400,
-            expectedMessage: { message: 'Invalid data: Invalid email format or missing fields' },
+            expectedMessage: { message: 'Invalid data: Invalid email format, missing fields, or invalid restaurantId' },
         },
 
         {
@@ -71,8 +79,10 @@ describe('addReview', () => {
             email: 'abc@gmail.com',
             reviewText: 'a'.repeat(501), // Create a reviewText that exceeds the limit (e.g., 501 characters)
             rating: 4,
+            restaurantId: 1,
+
             expectedStatus: 400,
-            expectedMessage: { message: 'Invalid data: Invalid email format or missing fields' },
+            expectedMessage: { message: 'Invalid data: Invalid email format, missing fields, or invalid restaurantId' },
         },
     ];
 
@@ -86,6 +96,8 @@ addReviewTestCases.forEach((testCase) => {
                 email: testCase.email,
                 reviewText: testCase.reviewText,
                 rating: testCase.rating,
+                restaurantId: testCase.restaurantId,
+
             },
         };
 
@@ -143,15 +155,19 @@ describe('Update Review Function', () => {
         {
             name: 'Should update a review successfully',
             email: 'abc@gmail.com',
-            reviewId: "07466bd9-648c-4967-82ba-3550c7577064",
+            reviewId: "91356b2e-f354-46fe-a454-a74e671c2926",
             reviewText: 'Test',
             rating: 5,
+            restaurantId: 1,
+
             expectedStatus: 200,
             expectedResponse: {
-                reviewId: "07466bd9-648c-4967-82ba-3550c7577064",
+                reviewId: "91356b2e-f354-46fe-a454-a74e671c2926",
                 email: 'abc@gmail.com',
                 reviewText: 'Test',
-                rating: 5
+                rating: 5,
+                restaurantId: 1
+
             },
         },
         {
@@ -252,3 +268,227 @@ describe('Update Review Function', () => {
 });
 
 
+describe('viewReview Function', () => {
+    const reviewsFilePath = 'utils/reviews.json';
+    let orgContent = [];
+
+    beforeEach(async () => {
+        try {
+            orgContent = await fs.readFile(reviewsFilePath, 'utf8');
+            orgContent = JSON.parse(orgContent);
+        } catch (error) {
+            console.error('Error reading or parsing reviews file:', error);
+        }
+    });
+
+    afterEach(async () => {
+        await fs.writeFile(reviewsFilePath, JSON.stringify(orgContent), 'utf8');
+    });
+
+    it('Should return user reviews successfully', async () => {
+        const userEmail = 'abc@gmail.com';
+
+        // Mock request and response objects
+        const req = {
+            params: { userEmail },
+        };
+
+        const res = {
+            status: function (code) {
+                expect(code).to.equal(200);
+                return this;
+            },
+            json: function (data) {
+                // Ensure that the response is an array
+                expect(data).to.be.an('array');
+                // Additional assertions can be added based on the expected behavior
+            },
+        };
+
+        try {
+            await viewReview(req, res);
+        } catch (error) {
+            console.error('Error during test execution:', error);
+            throw error;
+        } finally {
+            sinon.restore();
+        }
+    });
+    it('Should return 500 status code in case of internal error for viewReview', async () => {
+        const userEmail = 'abc@gmail.com';
+    
+        // Mock request and response objects
+        const req = {
+            params: { userEmail },
+        };
+    
+        const res = {
+            status: function (code) {
+                expect(code).to.equal(500);
+                return this;
+            },
+            json: function (data) {
+                // No specific assertions for the response in case of an error
+            },
+        };
+    
+        // Stub the readJSON function to simulate an internal error
+        sinon.stub(fs, 'readFile').throws(new Error('Simulated internal error'));
+    
+        try {
+            await viewReview(req, res);
+        } catch (error) {
+            // Handle any unexpected errors during the test
+            console.error('Error during test execution:', error);
+            throw error;
+        } finally {
+            // Restore the readJSON stub after the test is executed
+            sinon.restore();
+        }
+    });
+    
+});
+
+
+
+describe('viewReviewbyRestaurant Function', () => {
+    const reviewsFilePath = 'utils/reviews.json';
+    let orgContent = [];
+
+    beforeEach(async () => {
+        try {
+            orgContent = await fs.readFile(reviewsFilePath, 'utf8');
+            orgContent = JSON.parse(orgContent);
+        } catch (error) {
+            console.error('Error reading or parsing reviews file:', error);
+        }
+    });
+
+    afterEach(async () => {
+        await fs.writeFile(reviewsFilePath, JSON.stringify(orgContent), 'utf8');
+    });
+
+    it('Should return restaurant reviews successfully', async () => {
+        const restaurantId = 1;
+
+        // Mock request and response objects
+        const req = {
+            params: { restaurantId },
+        };
+
+        const res = {
+            status: function (code) {
+                expect(code).to.equal(200);
+                return this;
+            },
+            json: function (data) {
+                // Ensure that the response is an array
+                expect(data).to.be.an('array');
+                // Additional assertions can be added based on the expected behavior
+            },
+        };
+
+        try {
+            await viewReviewbyRestaurant(req, res);
+        } catch (error) {
+            console.error('Error during test execution:', error);
+            throw error;
+        } finally {
+            sinon.restore();
+        }
+    });
+
+    it('Should return 500 status code in case of internal error for viewReview', async () => {
+        const userEmail = 'abc@gmail.com';
+    
+        // Mock request and response objects
+        const req = {
+            params: { userEmail },
+        };
+    
+        const res = {
+            status: function (code) {
+                expect(code).to.equal(500);
+                return this;
+            },
+            json: function (data) {
+                // No specific assertions for the response in case of an error
+            },
+        };
+    
+        // Stub the readJSON function to simulate an internal error
+        sinon.stub(fs, 'readFile').throws(new Error('Simulated internal error'));
+    
+        try {
+            await viewReviewbyRestaurant(req, res);
+        } catch (error) {
+            // Handle any unexpected errors during the test
+            console.error('Error during test execution:', error);
+            throw error;
+        } finally {
+            // Restore the readJSON stub after the test is executed
+            sinon.restore();
+        }
+    });
+    });
+
+
+describe('viewAllReviews Function', () => {
+    it('Should return all reviews successfully', async () => {
+        // Mock request and response objects
+        const req = {};
+        const res = {
+            status: function (code) {
+                expect(code).to.equal(200);
+                return this;
+            },
+            json: function (data) {
+                // Ensure that the response is an array
+                expect(data).to.be.an('array');
+                // Additional assertions can be added based on the expected behavior
+            },
+        };
+
+        try {
+            await viewAllReviews(req, res);
+        } catch (error) {
+            console.error('Error during test execution:', error);
+            throw error;
+        } finally {
+            sinon.restore();
+        }
+    });
+
+    it('Should return 500 status code in case of internal error for viewReview', async () => {
+        const userEmail = 'abc@gmail.com';
+    
+        // Mock request and response objects
+        const req = {
+            params: { userEmail },
+        };
+    
+        const res = {
+            status: function (code) {
+                expect(code).to.equal(500);
+                return this;
+            },
+            json: function (data) {
+                // No specific assertions for the response in case of an error
+            },
+        };
+    
+        // Stub the readJSON function to simulate an internal error
+        sinon.stub(fs, 'readFile').throws(new Error('Simulated internal error'));
+    
+        try {
+            await viewAllReviews(req, res);
+        } catch (error) {
+            // Handle any unexpected errors during the test
+            console.error('Error during test execution:', error);
+            throw error;
+        } finally {
+            // Restore the readJSON stub after the test is executed
+            sinon.restore();
+        }
+    });
+    });

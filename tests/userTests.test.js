@@ -246,7 +246,7 @@ describe('updateEmail', () => {
                 userId: 1,
             },
             body: {
-                currentEmail: 'hey@example.com',
+                currentEmail: 'hanyi1234@example.com',
                 newEmail: 'bye@example.com',
             },
         };
