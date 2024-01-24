@@ -11,12 +11,17 @@ app.use(express.static("./public"));
 
 
 const { register, login, updateEmail } = require('./utils/UserUtil')
-const { addReview, viewReview , viewAllReviews, updateReview, deleteReview } = require('./utils/ReviewUtil')
+const { addReview, viewReview , viewAllReviews, updateReview, deleteReview,viewReviewbyRestaurant } = require('./utils/ReviewUtil')
+const { viewRestaurant,viewRestaurantById } = require('./utils/RestaurantUtil'); // Update the path
+
+app.get('/viewRestaurant', viewRestaurant);
+app.get('/viewRestaurantById/:restaurantId', viewRestaurantById);
+app.get('/viewReviewbyRestaurant/:restaurantId', viewReviewbyRestaurant);
 
 app.post('/register', register);
-app.post('/addReview', addReview); // Endpoint for adding reviews
-// app.get('/viewReview/:userEmail', viewReview); // Endpoint for viewing reviews
-// app.get('/viewAllReviews', viewAllReviews);
+app.post('/addReview', addReview);
+app.get('/viewReview/:userEmail', viewReview); // Endpoint for viewing reviews
+app.get('/viewAllReviews', viewAllReviews);
 app.put('/updateEmail', updateEmail);
 app.put('/updateReview', updateReview);
 app.delete('/deleteReview', deleteReview);
@@ -26,6 +31,8 @@ app.post('/login', login);
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/public/" + startPage);
 })
-app.listen(PORT, function () {
+const server = app.listen(PORT, function () {
     console.log(`Demo project at: ${PORT}!`);
 });
+
+module.exports = { app, server }
