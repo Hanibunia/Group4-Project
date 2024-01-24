@@ -1,0 +1,54 @@
+/* Style for the reviews modal */
+#reviewsModal {
+    color: #333; /* Text color */
+}
+
+#reviewsModalBody {
+    max-height: 500px; /* Set a maximum height for the reviews body */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds the max height */
+}
+
+.reviewText {
+    margin-bottom: 50px; /* Add space between each review */
+}
+
+.review-container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    margin-bottom: 50px;
+}
+
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 5px; /* Adjust this margin to add spacing between picture and text */
+}
+
+.profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.email {
+    margin-top: 2px; /* Adjust the margin to move the email closer to the profile picture */
+}
+
+.review-content {
+    text-align: center; /* Center the review text */
+    margin-bottom: -15px; /* Adjust this margin to reduce space between review text and email */
+}
+
+
+/* Style for rating stars */
+/* Style for rating stars */
+.rating-stars i.fas.fa-star {
+    color: yellow; /* Set the color for filled stars */
+}
+
+.rating-stars i.far.fa-star {
+    color: gray; /* Set the color for empty stars */
+}
