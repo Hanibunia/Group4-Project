@@ -113,7 +113,6 @@ async function addReview(email, reviewText, rating) {
             }),
         });
 
-        console.log('Server Response:', response);
 
         if (response.ok) {
             showReviews({ restaurantId });
