@@ -38,65 +38,91 @@ async function writeJSON(object, filename) {
 }
 
 
-// async function viewReview(req, res) {
-//     try {
-//         const userEmail = req.params.userEmail;
+async function viewReview(req, res) {
+    try {
+        const userEmail = req.params.userEmail; // Make sure it matches the route parameter
 
-//         if (!userEmail) {
-//             return res.status(400).json({ message: 'Invalid data: Missing user email' });
-//         }
+        if (!userEmail) {
+            return res.status(400).json({ message: 'Invalid data: Missing user email' });
+        }
 
-//         const allReviews = await readJSON('utils/reviews.json');
-//         const userReviews = allReviews.filter(entry => entry.userEmail === userEmail);
+        const allReviews = await readJSON('utils/reviews.json');
+        const userReviews = allReviews.filter(entry => entry.email === userEmail); // Updated to entry.email
 
-//         if (userReviews.length > 0) {
-//             res.status(200).json(userReviews);
-//         } else {
-//             res.status(404).json({ message: 'No reviews found for the user' });
-//         }
-//     } catch (error) {
-//         console.error('An error occurred:', error);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-
-
-// }
+        if (userReviews.length > 0) {
+            res.status(200).json(userReviews);
+        } else {
+            res.status(404).json({ message: 'No reviews found for the user' });
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 
 
-// async function viewAllReviews(req, res) {
-//     try {
-//         // Read all reviews from the file
-//         const allReviews = await readJSON('utils/reviews.json');
+}
 
-//         // Check if there are any reviews
-//         if (allReviews.length > 0) {
-//             res.status(200).json(allReviews);
-//         } else {
-//             res.status(404).json({ message: 'No reviews found' });
-//         }
-//     } catch (error) {
-//         console.error('An error occurred:', error);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// }
+async function viewReviewbyRestaurant(req, res) {
+    try {
+        const restaurantId = parseInt(req.params.restaurantId, 10);
+        // console.log(req.params);
+
+        if (!restaurantId) {
+            return res.status(400).json({ message: 'Invalid data: Missing restaurant ID' });
+        }
+
+        const allReviews = await readJSON('utils/reviews.json');
+        const restaurantReviews = allReviews.filter(entry => entry.restaurantId === restaurantId);
+
+        if (restaurantReviews.length > 0) {
+            res.status(200).json(restaurantReviews);
+        } else {
+            res.status(404).json({ message: 'No reviews found for the restaurant' });
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+async function viewAllReviews(req, res) {
+    try {
+        // Read all reviews from the file
+        const allReviews = await readJSON('utils/reviews.json');
+
+        // Check if there are any reviews
+        if (allReviews.length > 0) {
+            res.status(200).json(allReviews);
+        } else {
+            res.status(404).json({ message: 'No reviews found' });
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 async function addReview(req, res) {
     try {
+        console.log('Received request to add review. Request Body:', req.body);
+
         const email = req.body.email;
-        const { reviewText, rating } = req.body;
+        const { reviewText, rating, restaurantId } = req.body;
 
         // Enhanced input validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email) || isNaN(rating) || rating < 1 || rating > 5 || !reviewText || reviewText.length > 500) {
-            return res.status(400).json({ message: 'Invalid data: Invalid email format or missing fields' });
+        if (!email || !emailRegex.test(email) || isNaN(rating) || rating < 1 || rating > 5 || !reviewText || reviewText.length > 500 || !restaurantId) {
+            return res.status(400).json({ message: 'Invalid data: Invalid email format, missing fields, or invalid restaurantId' });
         }
 
         const allUsers = await readJSON('utils/users.json');
         const userExists = allUsers.some(user => user.email === email);
 
-        if (userExists) {
+        const restaurantExists = await checkIfRestaurantExists(restaurantId);
+
+        if (userExists && restaurantExists) {
             const reviewId = uuidv4(); // Generate a unique identifier
-            const review = new Review(reviewId, email, reviewText, rating);
+            const review = new Review(reviewId, email, reviewText, rating,restaurantId);
             const allReviews = await readJSON('utils/reviews.json');
 
             // Check if a review with the same reviewId already exists
@@ -116,7 +142,7 @@ async function addReview(req, res) {
                 res.status(400).json({ message: 'Review with the same reviewId already exists' });
             }
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({ message: 'User not found or Restaurant not found' });
         }
     } catch (error) {
         console.error('An error occurred:', error);
@@ -125,6 +151,15 @@ async function addReview(req, res) {
 }
 
 
+async function checkIfRestaurantExists(restaurantId) {
+    try {
+        const allRestaurants = await readJSON('utils/Restaurant.json');
+        return allRestaurants.some(restaurant => restaurant.restaurantId === restaurantId);
+    } catch (error) {
+        console.error('An error occurred:', error);
+        throw error;
+    }
+}
 
 async function updateReview(req, res) {
     try {
@@ -146,7 +181,7 @@ async function updateReview(req, res) {
         const reviewIndex = allReviews.findIndex(
             entry => entry.email === email && entry.reviewId === reviewId
         );
-        
+
         console.log('Review index:', reviewIndex);
 
         // Check if the review is found
@@ -228,5 +263,5 @@ async function deleteReview(req, res) {
 
 
 module.exports = {
-    readJSON, writeJSON, addReview, updateReview, deleteReview
+    readJSON, writeJSON, addReview, updateReview, deleteReview, viewReview, viewAllReviews,viewReviewbyRestaurant
 };
