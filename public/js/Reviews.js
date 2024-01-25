@@ -76,7 +76,7 @@ function showReviews(restaurant) {
                         // Append the review container to the reviews modal body
                         reviewsModalBody.appendChild(reviewContainer);
                         // Check if the user is logged in (check for the existence of 'user' in session storage)
-                        const user = JSON.parse(sessionStorage.getItem('user'));
+                        const user = JSON.parse(localStorage.getItem('user'));
                         if (user) {
                             // User is logged in, show the "Edit" icon
                             const editIcon = createEditIcon();
