@@ -19,15 +19,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         integrity="sha512-xwNyoI3+bMBqNSaA4i/GaQT6NHpd3sAtISB2qUMPPshPBCyFCDw8J06F5K5flW3tmKd5LV5+2lv/MSTl4UkpZQ=="
         crossorigin="anonymous" />
-        
 
     <link href="css/style.css" rel="stylesheet" />
     <link href="css/review.css" rel="stylesheet" />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcrypt/3.0.3/bcrypt.js"></script>
-   
     <script src="js/common.js"></script>
-    <script src="js/Login.js"></script>
     <script src="js/Restaurant.js"></script>
     <script src="js/Reviews.js"></script>
 
@@ -37,7 +33,7 @@
     <!-- Navigation -->
     <nav class="container-fluid navbar navbar-expand-md">
         <a class="navbar-brand" href="#">
-            ArkFood 
+            ArkFood <!-- Replace "#" with the actual link to your website's home page if available -->
         </a>
 
         <form class="form-inline my-2 my-lg-0">
@@ -68,6 +64,7 @@
         <div class="row">
             <div class="col-md-4 offset-md-2">
                 <h1>Discover your dream restaurant here</h1>
+                <a href="#" onclick="getRestaurant(999)" class="btn btn-warning">View all Restaurants</a>
             </div>
             <div class="col-md-4"><img src="images/banner.png" width="100%"></div>
         </div>
@@ -77,174 +74,225 @@
         <div class="restaurant-item" onclick="handleRestaurantItemClick('${restaurant.id}')">
 
 
-                <!-- Display restaurant information here -->
-            </div>
+            <!-- Display restaurant information here -->
         </div>
-        <!-- Login Modal -->
-        <div class="modal fade" id="loginForm" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="modal-title">Login </h2>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm">
-                                <form>
-                                    <div class="form-group">
-                                        <label id="loginLabelID">Email</label>
-                                        <input type="email" class="form-control" id="loginEmail">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="password" class="form-control" id="loginPassword">
-                                    </div>
+    </div>
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginForm" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Login </h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm">
+                            <form>
+                                <div class="form-group">
+                                    <label id="loginLabelID">Email</label>
+                                    <input type="email" class="form-control" id="LoginEmail">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" class="form-control" id="loginPassword">
+                                </div>
 
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm">
-                                <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#registerForm" id="Register">Not a user? Register here.</a>
-                            </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="loginUser()">Login</button>
+                    <div class="row">
+                        <div class="col-sm">
+                            <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#registerForm"
+                                id="Register">Not a user? Register here.</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Register Modal -->
-        <div class="modal fade" id="registerForm" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="modal-title">Register </h2>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm">
-                                <form>
-                                    <div class="form-group">
-                                        <label>Email</label>
-                                        <input type="email" class="form-control" id="Email">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="password" class="form-control" id="password">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Confirm Password</label>
-                                        <input type="password" class="form-control" id="confirm-password">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm">
-                                <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#loginForm">Already a
-                                    user?
-                                    Login here.</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="registerUser()"id="registerButtonId">Register</button>
-                    </div>
-                    <div id="registerError" class="text-danger text-center mt-2"></div>
-
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning" onclick="login()">Login</button>
                 </div>
-            </div>
-        </div>
-     <!-- Add a modal for displaying reviews -->
-<div class="modal fade reviews-modal" id="reviewsModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Reviews</h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-body" id="reviewsModalBody">
-                <!-- Reviews content will be appended here -->
-            </div>
-            <div class="modal-footer">
-                <!-- Button to open the add review form modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#addReviewModal">Add Review</button>
             </div>
         </div>
     </div>
-</div>
-
-
-        <!-- Modal for the add review form -->
-        <div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog" aria-labelledby="addReviewModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="modal-title" id="addReviewModalLabel">Add Review</h2>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerForm" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Register </h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm">
+                            <form>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" id="Email">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" class="form-control" id="password">
+                                </div>
+                                <div class="form-group">
+                                    <label>Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirm-password">
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <!-- Add Review Form -->
-                    <form id="addReviewForm">
-                        <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#loginForm">Already a
+                                user?
+                                Login here.</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning" onclick="registerUser()"
+                        id="registerButtonId">Register</button>
+                </div>
+                <div id="registerError" class="text-danger text-center mt-2"></div>
 
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input type="email" class="form-control" id="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="reviewText">Review:</label>
-                                <textarea class="form-control" id="reviewText" rows="3" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="rating">Rating:</label>
-                                <input type="number" class="form-control" id="rating" min="1" max="5" required>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit Review</button>
-                        </div>
-                    </form>
+            </div>
+        </div>
+    </div>
+    <!-- Add a modal for displaying reviews -->
+    <div class="modal fade reviews-modal" id="reviewsModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Reviews</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body" id="reviewsModalBody">
+                    <!-- Reviews content will be appended here -->
+                </div>
+                <div class="modal-footer">
+                    <!-- Button to open the add review form modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addReviewModal">Add
+                        Review</button>
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <script>
-            document.getElementById('addReviewForm').addEventListener('submit', async function (event) {
-                event.preventDefault();
+    <!-- Modal for the add review form -->
+    <div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog" aria-labelledby="addReviewModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="addReviewModalLabel">Add Review</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Add Review Form -->
+                <form id="addReviewForm">
+                    <div class="modal-body">
 
-                const email = document.getElementById('email').value;
-                const reviewText = document.getElementById('reviewText').value;
-                const rating = parseInt(document.getElementById('rating').value, 10);
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reviewText">Review:</label>
+                            <textarea class="form-control" id="reviewText" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="rating">Rating:</label>
+                            <input type="number" class="form-control" id="rating" min="1" max="5" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for updating a review -->
+    <div class="modal fade" id="updateReviewModal" tabindex="-1" role="dialog" aria-labelledby="updateReviewModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="updateReviewModalLabel">Update Review</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Update Review Form -->
+                <form id="updateReviewForm">
+                    <div class="modal-body">
 
-                try {
-                    // Call the addReview function with the form data and the stored restaurant ID
-                    addReview(email, reviewText, rating);
-                } catch (error) {
-                    console.error('An error occurred while getting the restaurant ID:', error);
-                }
-            });
+                        <div class="form-group">
+                            <label for="updatedReviewText">Updated Review:</label>
+                            <textarea class="form-control" id="updatedReviewText" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="updatedRating">Updated Rating:</label>
+                            <input type="number" class="form-control" id="updatedRating" min="1" max="5" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
+    <script>
+        document.getElementById('addReviewForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
 
-        </script>
+            const email = document.getElementById('email').value;
+            const reviewText = document.getElementById('reviewText').value;
+            const rating = parseInt(document.getElementById('rating').value, 10);
+
+            try {
+                // Call the addReview function with the form data and the stored restaurant ID
+                addReview(email, reviewText, rating);
+            } catch (error) {
+                console.error('An error occurred while getting the restaurant ID:', error);
+            }
+        });
+
+
+        // Listen for the update form submission
+        document.getElementById('updateReviewForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const updatedReviewText = document.getElementById('updatedReviewText').value;
+            const updatedRating = document.getElementById('updatedRating').value;
+
+            // Retrieve the review ID from the data attribute
+            const reviewId = $('#updateReviewModal').data('reviewId');
+            const email = $('#updateReviewModal').data('email');
+
+            // Call the function to update the review
+            updateReview(email, reviewId, updatedReviewText, updatedRating);
+
+            // Close the update modal after submission
+            $('#updateReviewModal').modal('hide');
+        });
+
+
+    </script>
 </body>
 
 </html>
