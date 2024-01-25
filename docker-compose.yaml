@@ -1,0 +1,8 @@
+version: '3'
+services: 
+  hanyi-rms: 
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: hanibunia/arkfood-img:latest
+    container_name: rms-docker-container
