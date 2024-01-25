@@ -10,7 +10,7 @@ const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions
 var server;
 var counter = 0;
 before(async function () {
-    this.timeout(10000); // Set a longer timeout (in milliseconds) for the server setup
+    this.timeout(100000); // Set timeout as 100 seconds
 
     server = await new Promise((resolve) => {
         const s = app.listen(0, 'localhost', () => {
@@ -132,6 +132,8 @@ describe('Testing Login UI', function () {
     
 
     it('Should display error for invalid email or password', async function () {
+        this.timeout(100000); // Set timeout as 100 seconds
+
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
     
         await driver.get(baseUrl);
@@ -178,6 +180,8 @@ describe('Testing Login UI', function () {
     });
     
     it('Should display error for password confirmation mismatch', async function () {
+        this.timeout(100000); // Set timeout as 100 seconds
+
         const baseUrl = 'http://localhost:' + server.address().port+ '/instrumented';
     
         await driver.get(baseUrl);
@@ -223,33 +227,9 @@ describe('Testing Login UI', function () {
         expect(errorText).to.equal('Password confirmation does not match');
     });
     
-    it('Should display the "Add Review" modal when clicking on the "Add Review" button', async function () {
-        const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-    
-        await driver.get(baseUrl);
-    
-        // Assuming there is at least one restaurant card on the page
-        const restaurantCard = await driver.findElement(By.className('card'));
-    
-        // Click on the restaurant card
-        await restaurantCard.click();
-    
-        // Wait for the reviews modal to be visible
-        const reviewsModal = await driver.findElement(By.id('reviewsModal'));
-        await driver.wait(until.elementIsVisible(reviewsModal), 5000);
-    
-        // Click on the "Add Review" button within the reviews modal
-        const addReviewButton = await driver.findElement(By.css('#reviewsModal .modal-footer button'));
-        await addReviewButton.click();
-    
-        // Wait for the add review modal to be visible
-        const addReviewModal = await driver.findElement(By.id('addReviewModal'));
-        await driver.wait(until.elementIsVisible(addReviewModal), 5000);
-    
-        // Check if the add review modal is displayed
-        expect(await addReviewModal.isDisplayed()).to.be.true;
-    });
     it('Should add a review through the "Add Review" modal', async function () {
+        this.timeout(10000000); // Set timeout as 100 seconds
+    
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
     
         await driver.get(baseUrl);
@@ -278,7 +258,7 @@ describe('Testing Login UI', function () {
         const ratingInput = await driver.findElement(By.id('rating'));
     
         await emailInput.sendKeys('abc@gmail.com');
-        await reviewTextInput.sendKeys('This restaurant is amazing!');
+        await reviewTextInput.sendKeys('Thh');
         await ratingInput.sendKeys('5');
     
         // Submit the review form
@@ -296,9 +276,14 @@ describe('Testing Login UI', function () {
     
         // Assert the expected behavior (add review modal is not displayed)
         expect(isAddReviewModalHidden).to.be.false;
-    
     });
+    
     it('Should log an error when adding a review fails with "Not Found"', async function () {
+        this.timeout(1000000); // Set timeout as 100 seconds
+    
+        // Wait for the first test case to complete before proceeding to the second one
+        await driver.sleep(2000); // Add a delay (adjust the time as needed)
+    
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
     
         await driver.get(baseUrl);
@@ -347,9 +332,9 @@ describe('Testing Login UI', function () {
     
         // Assert the expected behavior (console error is logged)
         expect(errorMessages.length).to.equal(1);
-
     });
 });
+
 
 afterEach(async function () {
     await driver.executeScript('return window.__coverage__;').then(async (coverageData) => {

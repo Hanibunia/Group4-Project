@@ -25,8 +25,17 @@ describe('deleteReview', () => {
     });
 
     afterEach(async () => {
-        await fs.writeFile(reviewsFilePath, JSON.stringify(orgContent), 'utf8');
+        // Delay execution for 1000 milliseconds (1 second)
+        const delayMilliseconds = 1000;
+    
+        await new Promise((resolve) => {
+            setTimeout(async () => {
+                await fs.writeFile(reviewsFilePath, JSON.stringify(orgContent), 'utf8');
+                resolve();
+            }, delayMilliseconds);
+        });
     });
+    
     //setting up task after test
     describe('deleteReview', () => {
         //testing on delete review
@@ -34,7 +43,7 @@ describe('deleteReview', () => {
             const req = {
                 body: {
                     email: 'abc@gmail.com',
-                    reviewId: '226fd52f-dfce-4414-9ef7-31d8dde514e8',
+                    reviewId: '9e096ce8-a2ba-4ae6-bfe5-e60a20201d85',
                 },
             };
 
