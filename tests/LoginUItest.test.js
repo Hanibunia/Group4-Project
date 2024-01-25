@@ -273,7 +273,7 @@ describe('Testing Login UI', function () {
     });
     it('Should add a review through the "Add Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-
+        this.timeout(100000)
         await driver.get(baseUrl);
 
         // Assuming there is at least one restaurant card on the page

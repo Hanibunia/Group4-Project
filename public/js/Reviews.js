@@ -75,11 +75,14 @@ function showReviews(restaurant) {
 
                         // Append the review container to the reviews modal body
                         reviewsModalBody.appendChild(reviewContainer);
-                        // Add an "Edit" icon beside each review
-                        const editIcon = createEditIcon();
-                        editIcon.addEventListener('click', () => openUpdateReviewModal(review));
-
-                        reviewContainer.appendChild(editIcon);
+                        // Check if the user is logged in (check for the existence of 'user' in session storage)
+                        const user = JSON.parse(sessionStorage.getItem('user'));
+                        if (user) {
+                            // User is logged in, show the "Edit" icon
+                            const editIcon = createEditIcon();
+                            editIcon.addEventListener('click', () => openUpdateReviewModal(review));
+                            reviewContainer.appendChild(editIcon);
+                        }
                     });
                 }
                 // Show the reviews modal
