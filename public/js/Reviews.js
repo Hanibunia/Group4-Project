@@ -77,6 +77,8 @@ function showReviews(restaurant) {
                         reviewsModalBody.appendChild(reviewContainer);
                         // Add an "Edit" icon beside each review
                         const editIcon = createEditIcon();
+                        editIcon.addEventListener('click', () => openUpdateReviewModal(review));
+
                         reviewContainer.appendChild(editIcon);
                     });
                 }
@@ -88,6 +90,7 @@ function showReviews(restaurant) {
         console.error('Invalid restaurant object: Missing restaurantId property');
     }
 }
+
 
 
 async function addReview(email, reviewText, rating) {
@@ -113,6 +116,7 @@ async function addReview(email, reviewText, rating) {
             }),
         });
 
+        console.log('Server Response:', response);
 
         if (response.ok) {
             showReviews({ restaurantId });
@@ -149,4 +153,53 @@ async function getSelectedRestaurantId() {
         return null; // Return null or handle the error accordingly
     }
 }
-    
+async function updateReview(email, reviewId, reviewText, rating) {
+    try {
+        const restaurantId = await getSelectedRestaurantId();
+
+        console.log('Updating review with the following data:');
+        console.log('Email:', email);
+        console.log('Review ID:', reviewId);
+        console.log('Review Text:', reviewText);
+        console.log('Rating:', rating);
+        console.log('Restaurant ID:', restaurantId);
+        const response = await fetch('/updateReview', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                reviewId,
+                reviewText,
+                rating,
+                restaurantId,
+            }),
+        });
+
+        if (response.ok) {
+            showReviews({ restaurantId });
+            $('#updateReviewModal').modal('hide');
+        } else {
+            console.error('Failed to update review:', response.statusText);
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
+}
+function openUpdateReviewModal(review) {
+    // Assuming you have fields in the update review modal with IDs like 'updatedReviewText' and 'updatedRating'
+    const updatedReviewTextInput = document.getElementById('updatedReviewText');
+    const updatedRatingInput = document.getElementById('updatedRating');
+
+    // Populate the modal fields with the existing review details
+    updatedReviewTextInput.value = review.reviewText;
+    updatedRatingInput.value = review.rating;
+
+    // Store the review ID and email in data attributes of the modal
+    $('#updateReviewModal').data('reviewId', review.reviewId);
+    $('#updateReviewModal').data('email', review.email);
+
+    // Open the update review modal
+    $('#updateReviewModal').modal('show');
+}
