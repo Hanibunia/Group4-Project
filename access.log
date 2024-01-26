@@ -1,0 +1,4 @@
+GET /viewRestaurantById/2 304 - - 3.723 ms
+PUT /updateReview 200 122 - 3.217 ms
+GET /viewReviewbyRestaurant/2 200 491 - 0.690 ms
+GET /viewRestaurant 304 - - 1.810 ms
