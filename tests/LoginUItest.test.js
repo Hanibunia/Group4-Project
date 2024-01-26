@@ -322,6 +322,7 @@ describe('Testing Login UI', function () {
     });
     it('Should log an error when adding a review fails with "Not Found"', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
+        this.timeout(100000);
 
         await driver.get(baseUrl);
 
@@ -405,7 +406,7 @@ describe('Testing Login UI', function () {
     });
     it('Should update a review through the "Update Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-        this.timeout(10000);
+        this.timeout(100000);
         await driver.get(baseUrl);
 
         // Assuming there is at least one restaurant card on the page

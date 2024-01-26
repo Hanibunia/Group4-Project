@@ -25,16 +25,23 @@ describe('deleteReview', () => {
     });
 
     afterEach(async () => {
+        // Delay for 1000 milliseconds (1 second)
+        const delayMilliseconds = 1000;
+    
+        await new Promise(resolve => setTimeout(resolve, delayMilliseconds));
+    
         await fs.writeFile(reviewsFilePath, JSON.stringify(orgContent), 'utf8');
     });
+    
     //setting up task after test
     describe('deleteReview', () => {
         //testing on delete review
         it('should delete a review', async () => {
+            
             const req = {
                 body: {
                     email: 'abc@gmail.com',
-                    reviewId: 'c6bde6f3-45ff-4143-82a6-9894f3baca95',
+                    reviewId: 'df61b6df-96c6-43a9-9196-f7a1bd22d4ce',
                 },
             };
 
