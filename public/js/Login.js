@@ -29,8 +29,7 @@ async function loginUser() {
         const result = await response.json();
 
         if (response.ok) {
-            // Successful login
-            alert(result.message);
+           
 
             const userData = {
                 email: email,
@@ -76,7 +75,7 @@ function checkLoggedIn() {
     const loginLink = document.getElementById('navUser');
     if (user) {
         // User is logged in, update the UI accordingly
-        loginLink.innerHTML = '<a class="nav-link" href="#" onclick="logoutUser()"><span class="fa-sharp fa-solid fa-right-to-bracket"></span> Logout</a>';
+        loginLink.innerHTML = '<a class="nav-link" href="#"  id="logout" onclick="logoutUser()"><span class="fa-sharp fa-solid fa-right-to-bracket"></span> Logout</a>';
     } else {
         // User is not logged in, update the UI accordingly
         loginLink.innerHTML = '<a class="nav-link" href="#" data-toggle="modal" data-target="#loginForm" onclick="toggleLogin()"><span class="fa-sharp fa-solid fa-right-to-bracket"></span> Login</a>';

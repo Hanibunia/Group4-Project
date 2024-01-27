@@ -76,9 +76,9 @@ function showReviews(restaurant) {
                         // Append the review container to the reviews modal body
                         reviewsModalBody.appendChild(reviewContainer);
                         // Check if the user is logged in (check for the existence of 'user' in session storage)
-                        // Check if the user is logged in
+                      // Check if the user is logged in
                         const loggedInUser = JSON.parse(localStorage.getItem('user'));
-
+                        
                         // Check if the review was created by the logged-in user
                         if (loggedInUser && loggedInUser.email === review.email) {
                             // User is logged in and the review belongs to them, show the "Edit" icon

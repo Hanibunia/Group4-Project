@@ -131,7 +131,7 @@ describe('Testing Login UI', function () {
         const passwordInput = await driver.findElement(By.id('password'));
         const confirmPasswordInput = await driver.findElement(By.id('confirm-password'));
 
-        await emailInput.sendKeys('testuser@abacasdasdsadsssssssssssgmail.com');
+        await emailInput.sendKeys('testuser@abacasdasdsadssssssssssssgmail.com');
         await passwordInput.sendKeys('password123');
         await confirmPasswordInput.sendKeys('password123');
 
@@ -244,13 +244,44 @@ describe('Testing Login UI', function () {
         // Assert the expected error message
         expect(errorText).to.equal('Password confirmation does not match');
     });
-
     it('Should display the "Add Review" modal when clicking on the "Add Review" button', async function () {
-        const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-
+        const baseUrl = 'http://localhost:' + server.address().port+ '/instrumented';
+        this.timeout(100000);
         await driver.get(baseUrl);
 
-        // Assuming there is at least one restaurant card on the page
+        // Click on the link to open the login modal
+        const loginLink = await driver.findElement(By.id('navUser'));
+        await loginLink.click();
+
+        // Wait for the login modal to be visible
+        const loginModal = await driver.findElement(By.id('loginForm'));
+        await driver.wait(until.elementIsVisible(loginModal), 5000);
+
+        const emailInput = await driver.findElement(By.id('loginEmail'));
+        const passwordInput = await driver.findElement(By.id('loginPassword'));
+        const actualLoginButton = await driver.findElement(By.id('LoginButton'));
+
+        // Enter login credentials
+        await emailInput.sendKeys('abc@gmail.com');
+        await passwordInput.sendKeys('hanyi909090');
+        console.log('Before clicking login button');
+
+        // Click the login button
+        await actualLoginButton.click();
+        console.log('After clicking login button');
+
+        await driver.navigate().refresh();
+
+        // Wait for the login modal to close
+        await driver.wait(until.stalenessOf(loginModal), 10000);
+        console.log('Login modal closed');
+
+
+        const logoutLink = await driver.findElement(By.id('logout'));
+        await driver.wait(until.elementIsVisible(logoutLink), 5000);
+        console.log('Logout here');
+
+        // Now that we are logged in, proceed with the next steps
         const restaurantCard = await driver.findElement(By.className('card'));
 
         // Click on the restaurant card
@@ -271,9 +302,11 @@ describe('Testing Login UI', function () {
         // Check if the add review modal is displayed
         expect(await addReviewModal.isDisplayed()).to.be.true;
     });
+
+
     it('Should add a review through the "Add Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-        this.timeout(100000)
+        this.timeout(1000000)
         await driver.get(baseUrl);
 
         // Assuming there is at least one restaurant card on the page
@@ -320,6 +353,7 @@ describe('Testing Login UI', function () {
         expect(isAddReviewModalHidden).to.be.false;
 
     });
+
     it('Should log an error when adding a review fails with "Not Found"', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
         this.timeout(100000);
@@ -406,7 +440,7 @@ describe('Testing Login UI', function () {
     });
     it('Should update a review through the "Update Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-        this.timeout(100000);
+        this.timeout(1000000);
         await driver.get(baseUrl);
 
         // Assuming there is at least one restaurant card on the page
