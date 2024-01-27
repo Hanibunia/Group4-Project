@@ -10,7 +10,6 @@ const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions
 var server;
 var counter = 0;
 before(async function () {
-    this.timeout(10000); // Set a longer timeout (in milliseconds) for the server setup
 
     server = await new Promise((resolve) => {
         const s = app.listen(0, 'localhost', () => {
@@ -131,7 +130,7 @@ describe('Testing Login UI', function () {
         const passwordInput = await driver.findElement(By.id('password'));
         const confirmPasswordInput = await driver.findElement(By.id('confirm-password'));
 
-        await emailInput.sendKeys('testuser@abacasdasdsadssssssssssssgmail.com');
+        await emailInput.sendKeys('testuser@absgmail.com');
         await passwordInput.sendKeys('password123');
         await confirmPasswordInput.sendKeys('password123');
 
@@ -155,6 +154,7 @@ describe('Testing Login UI', function () {
 
     it('Should display error for invalid email or password', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
+        this.timeout(100000);
 
         await driver.get(baseUrl);
 
@@ -201,6 +201,7 @@ describe('Testing Login UI', function () {
 
     it('Should display error for password confirmation mismatch', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
+        this.timeout(100000);
 
         await driver.get(baseUrl);
 
@@ -306,7 +307,7 @@ describe('Testing Login UI', function () {
 
     it('Should add a review through the "Add Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-        this.timeout(1000000)
+        this.timeout(10000)
         await driver.get(baseUrl);
 
         // Assuming there is at least one restaurant card on the page
@@ -356,7 +357,7 @@ describe('Testing Login UI', function () {
 
     it('Should log an error when adding a review fails with "Not Found"', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-        this.timeout(100000);
+        this.timeout(10000);
 
         await driver.get(baseUrl);
 
@@ -440,7 +441,7 @@ describe('Testing Login UI', function () {
     });
     it('Should update a review through the "Update Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-        this.timeout(1000000);
+        this.timeout(100000);
         await driver.get(baseUrl);
 
         // Assuming there is at least one restaurant card on the page
