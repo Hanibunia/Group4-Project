@@ -52,3 +52,11 @@
 .rating-stars i.far.fa-star {
     color: gray; /* Set the color for empty stars */
 }
+.icons-container {
+    display: inline-flex; /* Use inline-flex for flexbox layout */
+    align-items: center; /* Vertically center icons */
+}
+
+.icons-container > * {
+    margin-right: 5px; /* Adjust margin as needed between icons */
+}

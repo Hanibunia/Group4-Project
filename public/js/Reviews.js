@@ -88,12 +88,21 @@ function showReviews(restaurant) {
                             // User is logged in and the review belongs to them, show the "Edit" icon
                             const editIcon = createEditIcon();
                             editIcon.addEventListener('click', () => openUpdateReviewModal(review));
-                            reviewContainer.appendChild(editIcon);
-
-                            //if user is logged in, show the "Delete" icon
+                        
+                            // If user is logged in, show the "Delete" icon
                             const deleteIcon = createDeleteIcon();
                             deleteIcon.addEventListener('click', () => confirmAndDeleteReview({ reviewId: review.reviewId, email: review.email }));
-                            reviewContainer.appendChild(deleteIcon);
+                        
+                            // Create a container div for the icons
+                            const iconsContainer = document.createElement('div');
+                            iconsContainer.classList.add('icons-container');
+                        
+                            // Append the icons to the container
+                            iconsContainer.appendChild(editIcon);
+                            iconsContainer.appendChild(deleteIcon);
+                        
+                            // Append the container to the reviewContainer
+                            reviewContainer.appendChild(iconsContainer);
                         }
 
                         // Append the review container to the reviews modal body
