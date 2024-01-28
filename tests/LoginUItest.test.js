@@ -19,7 +19,8 @@ before(async function () {
     });
 });
 
-describe('Testing Login UI', function () {
+describe('Testing Hanyi Frontend', function () {
+    //Test Suite 1: Checking UI Elements////
 
     it('Should have the correct title', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
@@ -104,7 +105,9 @@ describe('Testing Login UI', function () {
         // Check if the register modal is displayed
         expect(await registerModal.isDisplayed()).to.be.true;
     });
+    //Test Suite 1: Checking UI Elements end ////
 
+    //Test Suite 2: User Registration//
     it('Should register a user', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
 
@@ -151,7 +154,10 @@ describe('Testing Login UI', function () {
         // Assert the expected behavior (registration modal is not displayed)
         expect(isRegisterModalHidden).to.be.true;
     });
+    //Test Suite 2: User Registration end /////////////////////////////////////
 
+
+    //Test Suite 3: Error Handling /////////////////////////////////////////
 
     it('Should display error for invalid email or password', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
@@ -244,8 +250,13 @@ describe('Testing Login UI', function () {
         // Assert the expected error message
         expect(errorText).to.equal('Password confirmation does not match');
     });
+    /////Test Suite 3: Error Handling end /////////////////////////////////////////
+
+
+    //Test Suite 4: Add Review /////////////////////////////////////
+
     it('Should display the "Add Review" modal when clicking on the "Add Review" button', async function () {
-        const baseUrl = 'http://localhost:' + server.address().port+ '/instrumented';
+        const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
         this.timeout(100000);
         await driver.get(baseUrl);
 
@@ -406,7 +417,10 @@ describe('Testing Login UI', function () {
         expect(errorMessages.length).to.equal(1);
 
     });
+    //Test Suite 4: Add Review end /////////////////////////////////////
 
+
+    /////Test Suite 5: Update Review/////////////////////////////////////////
 
     it('Should open the "Update Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
@@ -491,6 +505,8 @@ describe('Testing Login UI', function () {
         expect(isUpdateReviewModalHidden).to.be.false;
     });
 });
+/////Test Suite 5: Update Review end /////////////////////////////////////////
+
 afterEach(async function () {
     await driver.executeScript('return window.__coverage__;').then(async (coverageData) => {
         if (coverageData) {
