@@ -18,6 +18,12 @@ function createEditIcon() {
     editIcon.classList.add('fas', 'fa-edit', 'edit-icon');
     return editIcon;
 }
+// creating delete icon
+function createDeleteIcon() {
+    const deleteIcon = document.createElement('i');
+    deleteIcon.classList.add('fas', 'fa-trash-alt', 'delete-icon');
+    return deleteIcon;
+}
 
 // Update the showReviews function
 function showReviews(restaurant) {
@@ -73,8 +79,6 @@ function showReviews(restaurant) {
                         reviewContainer.appendChild(emailDiv);
                         reviewContainer.appendChild(ratingStars);
 
-                        // Append the review container to the reviews modal body
-                        reviewsModalBody.appendChild(reviewContainer);
                         // Check if the user is logged in (check for the existence of 'user' in session storage)
                       // Check if the user is logged in
                         const loggedInUser = JSON.parse(localStorage.getItem('user'));
@@ -85,7 +89,15 @@ function showReviews(restaurant) {
                             const editIcon = createEditIcon();
                             editIcon.addEventListener('click', () => openUpdateReviewModal(review));
                             reviewContainer.appendChild(editIcon);
+
+                            //if user is logged in, show the "Delete" icon
+                            const deleteIcon = createDeleteIcon();
+                            deleteIcon.addEventListener('click', () => confirmAndDeleteReview({ reviewId: review.reviewId, email: review.email }));
+                            reviewContainer.appendChild(deleteIcon);
                         }
+
+                        // Append the review container to the reviews modal body
+                        reviewsModalBody.appendChild(reviewContainer);
                     });
                 }
                 // Show the reviews modal
@@ -207,4 +219,46 @@ function openUpdateReviewModal(review) {
 
     // Open the update review modal
     $('#updateReviewModal').modal('show');
+}
+function confirmAndDeleteReview({ reviewId, email }) {
+    // Show a confirmation dialog to the user
+    const isConfirmed = confirm("Are you sure you want to delete this review?");
+  
+    if (isConfirmed) {
+        // If user confirms, you can make an API request to delete the review
+        // Replace the URL and method with your actual API endpoint and method (e.g., POST, DELETE)
+        fetch('/deleteReview', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                reviewId
+            }),
+        })
+        .then(response => {
+            if (response.ok) {
+                // Review deleted successfully, you can update the UI or handle it as needed
+                console.log('Review deleted successfully');
+
+                // Update the UI by removing the deleted review element from the DOM
+                const deletedReviewElement = document.getElementById(`review-${reviewId}`);
+                if (deletedReviewElement) {
+                    deletedReviewElement.remove();
+                    
+                }
+            } else {
+                // Handle error response from the server
+                console.error('Failed to delete review');
+            }window.location.reload();
+        })
+        .catch(error => {
+            // Handle network errors or other issues
+            console.error('Error deleting review:', error);
+        });
+    } else {
+        // User canceled the deletion
+        console.log('Deletion canceled');
+    }
 }
