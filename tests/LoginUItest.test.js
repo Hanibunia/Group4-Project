@@ -10,7 +10,6 @@ const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions
 var server;
 var counter = 0;
 before(async function () {
-    this.timeout(10000); // Set a longer timeout (in milliseconds) for the server setup
 
     server = await new Promise((resolve) => {
         const s = app.listen(0, 'localhost', () => {
@@ -19,7 +18,8 @@ before(async function () {
     });
 });
 
-describe('Testing Login UI', function () {
+describe('Testing Hanyi Frontend', function () {
+    //Test Suite 1: Checking UI Elements////
 
     it('Should have the correct title', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
@@ -104,7 +104,9 @@ describe('Testing Login UI', function () {
         // Check if the register modal is displayed
         expect(await registerModal.isDisplayed()).to.be.true;
     });
+    //Test Suite 1: Checking UI Elements end ////
 
+    //Test Suite 2: User Registration//
     it('Should register a user', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
 
@@ -131,7 +133,7 @@ describe('Testing Login UI', function () {
         const passwordInput = await driver.findElement(By.id('password'));
         const confirmPasswordInput = await driver.findElement(By.id('confirm-password'));
 
-        await emailInput.sendKeys('testuser@abacasdasdsadsssssssssssgmail.com');
+        await emailInput.sendKeys('testuser@absgmail.com');
         await passwordInput.sendKeys('password123');
         await confirmPasswordInput.sendKeys('password123');
 
@@ -151,10 +153,14 @@ describe('Testing Login UI', function () {
         // Assert the expected behavior (registration modal is not displayed)
         expect(isRegisterModalHidden).to.be.true;
     });
+    //Test Suite 2: User Registration end /////////////////////////////////////
 
+
+    //Test Suite 3: Error Handling /////////////////////////////////////////
 
     it('Should display error for invalid email or password', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
+        this.timeout(100000);
 
         await driver.get(baseUrl);
 
@@ -201,6 +207,7 @@ describe('Testing Login UI', function () {
 
     it('Should display error for password confirmation mismatch', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
+        this.timeout(100000);
 
         await driver.get(baseUrl);
 
@@ -244,13 +251,49 @@ describe('Testing Login UI', function () {
         // Assert the expected error message
         expect(errorText).to.equal('Password confirmation does not match');
     });
+    /////Test Suite 3: Error Handling end /////////////////////////////////////////
+
+
+    //Test Suite 4: Add Review /////////////////////////////////////
 
     it('Should display the "Add Review" modal when clicking on the "Add Review" button', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-
+        this.timeout(100000);
         await driver.get(baseUrl);
 
-        // Assuming there is at least one restaurant card on the page
+        // Click on the link to open the login modal
+        const loginLink = await driver.findElement(By.id('navUser'));
+        await loginLink.click();
+
+        // Wait for the login modal to be visible
+        const loginModal = await driver.findElement(By.id('loginForm'));
+        await driver.wait(until.elementIsVisible(loginModal), 5000);
+
+        const emailInput = await driver.findElement(By.id('loginEmail'));
+        const passwordInput = await driver.findElement(By.id('loginPassword'));
+        const actualLoginButton = await driver.findElement(By.id('LoginButton'));
+
+        // Enter login credentials
+        await emailInput.sendKeys('abc@gmail.com');
+        await passwordInput.sendKeys('hanyi909090');
+        console.log('Before clicking login button');
+
+        // Click the login button
+        await actualLoginButton.click();
+        console.log('After clicking login button');
+
+        await driver.navigate().refresh();
+
+        // Wait for the login modal to close
+        await driver.wait(until.stalenessOf(loginModal), 10000);
+        console.log('Login modal closed');
+
+
+        const logoutLink = await driver.findElement(By.id('logout'));
+        await driver.wait(until.elementIsVisible(logoutLink), 5000);
+        console.log('Logout here');
+
+        // Now that we are logged in, proceed with the next steps
         const restaurantCard = await driver.findElement(By.className('card'));
 
         // Click on the restaurant card
@@ -271,9 +314,11 @@ describe('Testing Login UI', function () {
         // Check if the add review modal is displayed
         expect(await addReviewModal.isDisplayed()).to.be.true;
     });
+
+
     it('Should add a review through the "Add Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-        this.timeout(100000)
+        this.timeout(10000)
         await driver.get(baseUrl);
 
         // Assuming there is at least one restaurant card on the page
@@ -320,9 +365,10 @@ describe('Testing Login UI', function () {
         expect(isAddReviewModalHidden).to.be.false;
 
     });
+
     it('Should log an error when adding a review fails with "Not Found"', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-        this.timeout(100000);
+        this.timeout(10000);
 
         await driver.get(baseUrl);
 
@@ -372,7 +418,10 @@ describe('Testing Login UI', function () {
         expect(errorMessages.length).to.equal(1);
 
     });
+    //Test Suite 4: Add Review end /////////////////////////////////////
 
+
+    /////Test Suite 5: Update Review/////////////////////////////////////////
 
     it('Should open the "Update Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
@@ -457,6 +506,8 @@ describe('Testing Login UI', function () {
         expect(isUpdateReviewModalHidden).to.be.false;
     });
 });
+/////Test Suite 5: Update Review end /////////////////////////////////////////
+
 afterEach(async function () {
     await driver.executeScript('return window.__coverage__;').then(async (coverageData) => {
         if (coverageData) {

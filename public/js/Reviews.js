@@ -80,9 +80,12 @@ function showReviews(restaurant) {
                         reviewContainer.appendChild(ratingStars);
 
                         // Check if the user is logged in (check for the existence of 'user' in session storage)
-                        const user = JSON.parse(localStorage.getItem('user'));
-                        if (user) {
-                            // User is logged in, show the "Edit" icon
+                      // Check if the user is logged in
+                        const loggedInUser = JSON.parse(localStorage.getItem('user'));
+                        
+                        // Check if the review was created by the logged-in user
+                        if (loggedInUser && loggedInUser.email === review.email) {
+                            // User is logged in and the review belongs to them, show the "Edit" icon
                             const editIcon = createEditIcon();
                             editIcon.addEventListener('click', () => openUpdateReviewModal(review));
                             reviewContainer.appendChild(editIcon);
@@ -105,7 +108,6 @@ function showReviews(restaurant) {
         console.error('Invalid restaurant object: Missing restaurantId property');
     }
 }
-
 
 
 async function addReview(email, reviewText, rating) {

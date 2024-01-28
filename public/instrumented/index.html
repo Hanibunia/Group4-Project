@@ -16,12 +16,14 @@
         crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/c40c131336.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Roboto:400,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        integrity="sha512-xwNyoI3+bMBqNSaA4i/GaQT6NHpd3sAtISB2qUMPPshPBCyFCDw8J06F5K5flW3tmKd5LV5+2lv/MSTl4UkpZQ=="
-        crossorigin="anonymous" />
+  
+
 
     <link href="css/style.css" rel="stylesheet" />
     <link href="css/review.css" rel="stylesheet" />
+
+    <script src="js/Restaurant.js"></script>
+    <script src="js/Login.js"></script>
 
     <script src="js/common.js"></script>
     <script src="js/Restaurant.js"></script>
@@ -51,9 +53,13 @@
                             <a class="nav-link" href="index.html"><span class="fa fa-home"></span> Home</a>
                         </li>
                         <li class="nav-item" id="navUser">
-                            <a class="nav-link" href="#" data-toggle="modal" data-target="#loginForm"><span
-                                    class="fa-sharp fa-solid fa-right-to-bracket"></span> Login</a>
+                            <a class="nav-link" href="#" data-toggle="modal" data-target="#loginForm"
+                                onclick="toggleLogin()">
+                                <span class="fa-sharp fa-solid fa-right-to-bracket"></span>
+                                <span id="loginStatus">Login</span>
+                            </a>
                         </li>
+
                     </ul>
         </ul>
         </div>
@@ -93,7 +99,7 @@
                             <form>
                                 <div class="form-group">
                                     <label id="loginLabelID">Email</label>
-                                    <input type="email" class="form-control" id="LoginEmail">
+                                    <input type="email" class="form-control" id="loginEmail">
                                 </div>
                                 <div class="form-group">
                                     <label>Password</label>
@@ -112,7 +118,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-warning" onclick="login()">Login</button>
+                    <button type="button" class="btn btn-warning"  id="LoginButton" onclick="loginUser()">Login</button>
                 </div>
             </div>
         </div>
@@ -180,14 +186,12 @@
                 </div>
                 <div class="modal-footer">
                     <!-- Button to open the add review form modal -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addReviewModal">Add
-                        Review</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addReviewModal"
+                        id="addReviewButton">Add Review</button>
                 </div>
             </div>
         </div>
     </div>
-
-
     <!-- Modal for the add review form -->
     <div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog" aria-labelledby="addReviewModalLabel">
         <div class="modal-dialog" role="document">
@@ -222,6 +226,7 @@
                 </form>
             </div>
         </div>
+    </div>
     </div>
     <!-- Modal for updating a review -->
     <div class="modal fade" id="updateReviewModal" tabindex="-1" role="dialog" aria-labelledby="updateReviewModalLabel">
@@ -272,7 +277,6 @@
             }
         });
 
-
         // Listen for the update form submission
         document.getElementById('updateReviewForm').addEventListener('submit', function (event) {
             event.preventDefault();
@@ -290,7 +294,35 @@
             // Close the update modal after submission
             $('#updateReviewModal').modal('hide');
         });
+        // Function to update the "Add Review" button visibility based on login status
+        function updateAddReviewButtonVisibility() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const addReviewButton = document.getElementById('addReviewButton');
 
+            if (user) {
+                // User is logged in, show the "Add Review" button
+                addReviewButton.style.display = 'block';
+            } else {
+                // User is not logged in, hide the "Add Review" button
+                addReviewButton.style.display = 'none';
+            }
+        }
+
+        // Check the login status when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check the login status
+            updateAddReviewButtonVisibility();
+        });
+
+        // Add an event listener for changes in login status
+        window.addEventListener('storage', function (e) {
+            if (e.key === 'user') {
+                // Login status changed, update the "Add Review" button visibility
+                updateAddReviewButtonVisibility();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', checkLoggedIn);
 
     </script>
 </body>
