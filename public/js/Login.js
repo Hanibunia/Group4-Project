@@ -59,6 +59,7 @@ async function loginUser() {
         console.error('Error during login:', error);
         alert('An error occurred during login. Please try again.');
     }
+    window.location.reload();
 }
 
 function checkLoggedIn() {
@@ -117,6 +118,7 @@ function logoutUser() {
 
     // Optionally, display a logout message or update the UI
     alert('Logout successful');
+    window.location.reload();
 }
 
 // Check the login status when the page loads
