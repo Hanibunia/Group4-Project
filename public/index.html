@@ -61,6 +61,12 @@
                                 <span id="loginStatus">Login</span>
                             </a>
                         </li>
+                        <li class="nav-item" id="navMyProfile">
+                            <a class="nav-link" href="#" id="myProfileTab" data-toggle="modal"
+                                data-target="#myProfileModal">
+                                <span class="fas fa-user"></span> My Profile
+                            </a>
+                        </li>
 
                     </ul>
         </ul>
@@ -258,9 +264,31 @@
                         <button type="submit" class="btn btn-primary">Update Review</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
+    <div class="modal fade" id="myProfileModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">My Profile</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add content for My Profile here (e.g., user information) -->
+                    <p>Welcome, <span id="userDisplayName"></span>!</p>
+                    <!-- Add more user information if needed -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <script>
@@ -296,6 +324,7 @@
             // Close the update modal after submission
             $('#updateReviewModal').modal('hide');
         });
+
         // Function to update the "Add Review" button visibility based on login status
         function updateAddReviewButtonVisibility() {
             const user = JSON.parse(localStorage.getItem('user'));
@@ -309,11 +338,25 @@
                 addReviewButton.style.display = 'none';
             }
         }
+        function updateMyProfileTabVisibility() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const myProfileTab = document.getElementById('myProfileTab');
+
+            if (user) {
+                // User is logged in, show the "My Profile" tab
+                myProfileTab.style.display = 'block';
+            } else {
+                // User is not logged in, hide the "My Profile" tab
+                myProfileTab.style.display = 'none';
+            }
+            
+        }
 
         // Check the login status when the page loads
         document.addEventListener('DOMContentLoaded', function () {
             // Check the login status
             updateAddReviewButtonVisibility();
+            updateMyProfileTabVisibility();
         });
 
         // Add an event listener for changes in login status
@@ -321,10 +364,38 @@
             if (e.key === 'user') {
                 // Login status changed, update the "Add Review" button visibility
                 updateAddReviewButtonVisibility();
+                updateMyProfileTabVisibility();
             }
         });
 
         document.addEventListener('DOMContentLoaded', checkLoggedIn);
+        document.getElementById('deleteReviewForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const reviewId = document.getElementById('reviewId').value;
+
+            try {
+                deleteReview(reviewId);
+            } catch (error) {
+                console.error('An error occurred while deleting the review:', error);
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check the login status for the "Add Review" button
+            updateAddReviewButtonVisibility();
+
+            // Check the login status for the "My Profile" tab
+            updateMyProfileTabVisibility();
+        });
+
+        // Add an event listener for changes in login status
+        window.addEventListener('storage', function (e) {
+            if (e.key === 'user') {
+                // Login status changed, update the "Add Review" button and "My Profile" tab visibility
+                updateAddReviewButtonVisibility();
+                updateMyProfileTabVisibility();
+            }
+        });
 
     </script>
 </body>
