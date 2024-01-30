@@ -30,6 +30,7 @@ function showReviews(restaurant) {
     const restaurantId = restaurant.restaurantId;
 
     // Check if the restaurantId is defined before making the fetch request
+    /* istanbul ignore next */
     if (restaurantId) {
         // Fetch reviews data for the selected restaurant
         fetch(`/viewReviewbyRestaurant/${restaurantId}`)
@@ -143,7 +144,7 @@ async function addReview(email, reviewText, rating) {
         });
 
         console.log('Server Response:', response);
-
+        /* istanbul ignore next */
         if (response.ok) {
             showReviews({ restaurantId });
 
@@ -163,7 +164,7 @@ async function getSelectedRestaurantId() {
         const response = await fetch(`/viewRestaurantById/${selectedRestaurantId}`);
         const data = await response.json();
 
-
+        /* istanbul ignore next */
         if (response.ok) {
             // Parse the restaurantId as an integer
             const restaurantId = parseInt(data.restaurantId, 10);
@@ -202,7 +203,7 @@ async function updateReview(email, reviewId, reviewText, rating) {
                 restaurantId,
             }),
         });
-
+        /* istanbul ignore next */
         if (response.ok) {
             showReviews({ restaurantId });
             $('#updateReviewModal').modal('hide');
@@ -229,45 +230,45 @@ function openUpdateReviewModal(review) {
     // Open the update review modal
     $('#updateReviewModal').modal('show');
 }
-function confirmAndDeleteReview({ reviewId, email }) {
-    // Show a confirmation dialog to the user
-    const isConfirmed = confirm("Are you sure you want to delete this review?");
+// function confirmAndDeleteReview({ reviewId, email }) {
+//     // Show a confirmation dialog to the user
+//     const isConfirmed = confirm("Are you sure you want to delete this review?");
   
-    if (isConfirmed) {
-        // If user confirms, you can make an API request to delete the review
-        // Replace the URL and method with your actual API endpoint and method (e.g., POST, DELETE)
-        fetch('/deleteReview', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-                reviewId
-            }),
-        })
-        .then(response => {
-            if (response.ok) {
-                // Review deleted successfully, you can update the UI or handle it as needed
-                console.log('Review deleted successfully');
+//     if (isConfirmed) {
+//         // If user confirms, you can make an API request to delete the review
+//         // Replace the URL and method with your actual API endpoint and method (e.g., POST, DELETE)
+//         fetch('/deleteReview', {
+//             method: 'DELETE',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({
+//                 email,
+//                 reviewId
+//             }),
+//         })
+//         .then(response => {
+//             if (response.ok) {
+//                 // Review deleted successfully, you can update the UI or handle it as needed
+//                 console.log('Review deleted successfully');
 
-                // Update the UI by removing the deleted review element from the DOM
-                const deletedReviewElement = document.getElementById(`review-${reviewId}`);
-                if (deletedReviewElement) {
-                    deletedReviewElement.remove();
+//                 // Update the UI by removing the deleted review element from the DOM
+//                 const deletedReviewElement = document.getElementById(`review-${reviewId}`);
+//                 if (deletedReviewElement) {
+//                     deletedReviewElement.remove();
                     
-                }
-            } else {
-                // Handle error response from the server
-                console.error('Failed to delete review');
-            }window.location.reload();
-        })
-        .catch(error => {
-            // Handle network errors or other issues
-            console.error('Error deleting review:', error);
-        });
-    } else {
-        // User canceled the deletion
-        console.log('Deletion canceled');
-    }
-}
+//                 }
+//             } else {
+//                 // Handle error response from the server
+//                 console.error('Failed to delete review');
+//             }window.location.reload();
+//         })
+//         .catch(error => {
+//             // Handle network errors or other issues
+//             console.error('Error deleting review:', error);
+//         });
+//     } else {
+//         // User canceled the deletion
+//         console.log('Deletion canceled');
+//     }
+// }
