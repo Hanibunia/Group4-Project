@@ -49,7 +49,7 @@ async function loginUser() {
             // Update the UI based on the login status
             checkLoggedIn();
 
-           
+            window.location.reload();
         } else {
             // Failed login
             alert(result.message);
@@ -59,7 +59,7 @@ async function loginUser() {
         console.error('Error during login:', error);
         alert('An error occurred during login. Please try again.');
     }
-    window.location.reload();
+    
 }
 
 function checkLoggedIn() {

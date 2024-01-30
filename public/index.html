@@ -28,6 +28,7 @@
     <script src="js/common.js"></script>
     <script src="js/Restaurant.js"></script>
     <script src="js/Reviews.js"></script>
+    <script src="js/Profile.js"></script>
 
 </head>
 
@@ -277,11 +278,44 @@
                 </div>
                 <div class="modal-body">
                     <!-- Add content for My Profile here (e.g., user information) -->
-                    <p>Welcome, <span id="userDisplayName"></span>!</p>
+                    <p>Welcome User</p>
+
                     <!-- Add more user information if needed -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateEmailModal">
+                        Change Email
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for changing email -->
+    <div class="modal fade" id="updateEmailModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Update Email</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add a form for updating the email -->
+                    <form id="updateEmailForm">
+                        <div class="form-group">
+                            <label for="currentEmail">Current Email:</label>
+                            <input type="email" id="currentEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newEmail">New Email:</label>
+                            <input type="email" id="newEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" onclick="updateEmail()">Update Email</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -347,9 +381,7 @@
                 // User is not logged in, hide the "My Profile" tab
                 myProfileTab.style.display = 'none';
             }
-            
         }
-
         // Check the login status when the page loads
         document.addEventListener('DOMContentLoaded', function () {
             // Check the login status
@@ -394,6 +426,29 @@
                 updateMyProfileTabVisibility();
             }
         });
+        document.getElementById('myProfileModal').addEventListener('show.bs.modal', function () {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+        // Update the email content in the modal
+        document.getElementById('email').textContent = user.email;
+    }
+});
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('updateEmailForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const currentEmail = document.getElementById('currentEmail').value;
+        const newEmail = document.getElementById('newEmail').value;
+
+        try {
+            await updateUserEmail(currentEmail, newEmail);
+            // Optionally, you can close the modal or update the UI
+            document.getElementById('updateEmailModal').style.display = 'none';
+        } catch (error) {
+            console.error('An error occurred:', error);
+        }
+    });
+});
 
     </script>
 </body>
