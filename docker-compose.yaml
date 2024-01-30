@@ -4,5 +4,5 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    image: hanibunia/arkfood-img:v4
+    image: hanibunia/arkfood-img:v5
     container_name: rms-docker-container
