@@ -6,7 +6,8 @@
   "nyc": {
     "include": [
       "utils/UserUtil.js",
-      "utils/ReviewUtil.js"
+      "utils/ReviewUtil.js",
+      "public/**/*.js"
       
     ],
     "exclude": [],

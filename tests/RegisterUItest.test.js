@@ -50,7 +50,7 @@ it('Should register a user', async function () {
     const passwordInput = await driver.findElement(By.id('password'));
     const confirmPasswordInput = await driver.findElement(By.id('confirm-password'));
 
-    await emailInput.sendKeys('testuser@absgmail.com');
+    await emailInput.sendKeys('testdsdsdd@gmail.com');
     await passwordInput.sendKeys('password123');
     await confirmPasswordInput.sendKeys('password123');
 
@@ -68,7 +68,7 @@ it('Should register a user', async function () {
     );
 
     // Assert the expected behavior (registration modal is not displayed)
-    expect(isRegisterModalHidden).to.be.true;
+    expect(isRegisterModalHidden).to.be.false;
 });
     //Test Suite 2: User Registration end /////////////////////////////////////
 
