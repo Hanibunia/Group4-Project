@@ -2,11 +2,11 @@
     {
         "restaurantId": 1,
         "name": "Mcdonald",
-        "imageUrl": "https://i.postimg.cc/MZvCS2z7/6-0.jpg"
+        "imageUrl": "https://i.postimg.cc/d1H3VPpm/Mcdonald.jpg"
     },
     {
         "restaurantId": 2,
-        "name": "sss",
-        "imageUrl": "https://i.postimg.cc/MZvCS2z7/6-0.jpg"
+        "name": "KFC",
+        "imageUrl": "https://i.postimg.cc/ZKTmDDQJ/BK-LOGO-PRIMARY-ST-RGB.jpg"
     }
 ]
