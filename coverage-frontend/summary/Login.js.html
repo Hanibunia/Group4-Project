@@ -312,24 +312,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">49x</span></td><td class="text"><pre class="prettyprint lang-js">async function <span class="fstat-no" title="function not covered" >loginUser(</span>) {
-    // Get user input values
+    // getting user inputs
     var email = <span class="cstat-no" title="statement not covered" >document.getElementById('loginEmail').value;</span>
     var password = <span class="cstat-no" title="statement not covered" >document.getElementById('loginPassword').value;</span>
 &nbsp;
-    // Perform validation
+    // validation
 <span class="cstat-no" title="statement not covered" >    if (!email.includes('@') || password.length &lt; 6) {</span>
 <span class="cstat-no" title="statement not covered" >        alert('Invalid email or password (minimum 6 characters).');</span>
 <span class="cstat-no" title="statement not covered" >        return;</span>
     }
 &nbsp;
-    // Prepare data for the backend
+    // calling data
     var data = <span class="cstat-no" title="statement not covered" >{</span>
         email: email,
         password: password
     };
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    try {</span>
-        // Make a POST request to the backend
+        // POST to backend
         const response = <span class="cstat-no" title="statement not covered" >await fetch('/login', {</span>
             method: 'POST',
             headers: {
@@ -338,7 +338,7 @@
             body: JSON.stringify(data)
         });
 &nbsp;
-        // Parse the JSON response
+        // parse
         const result = <span class="cstat-no" title="statement not covered" >await response.json();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (response.ok) {</span>
@@ -346,20 +346,20 @@
 &nbsp;
             const userData = <span class="cstat-no" title="statement not covered" >{</span>
                 email: email,
-                // You can include other user-related information if needed
+                
             };
 &nbsp;
-            // Store user data in localStorage
+            // user data in localStorage
 <span class="cstat-no" title="statement not covered" >            localStorage.setItem('user', JSON.stringify(userData));</span>
 &nbsp;
-            // Change the "Login" link to "Logout" and bind the logout function
+            // login function
             const loginLink = <span class="cstat-no" title="statement not covered" >document.getElementById('navUser');</span>
 <span class="cstat-no" title="statement not covered" >            loginLink.innerHTML = '&lt;a class="nav-link" href="#" onclick="logoutUser()"&gt;&lt;span class="fa-sharp fa-solid fa-right-to-bracket"&gt;&lt;/span&gt; Logout&lt;/a&gt;';</span>
 &nbsp;
-            // Close the login modal or redirect the user
+            // closing login modal
 <span class="cstat-no" title="statement not covered" >            $('#loginForm').modal('hide');</span>
 &nbsp;
-            // Update the UI based on the login status
+            
 <span class="cstat-no" title="statement not covered" >            checkLoggedIn();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            window.location.reload();</span>
@@ -376,51 +376,51 @@
 }
 &nbsp;
 function checkLoggedIn() {
-    // Check if the user is logged in
+    // checkin if user is logged in
     const user = JSON.parse(localStorage.getItem('user'));
 &nbsp;
-    // Show/hide the "Add Review" button based on the login status
+    // show or hide base on login status
     const addReviewButton = document.getElementById('addReviewButton');
     if (addReviewButton) {
         addReviewButton.style.display = user ? 'block' : 'none';
     }
 &nbsp;
-    // Update the login/logout link
+    // update of ui
     const loginLink = document.getElementById('navUser');
     if (user) {
-        // User is logged in, update the UI accordingly
+        // if user is logged in
         loginLink.innerHTML = '&lt;a class="nav-link" href="#"  id="logout" onclick="logoutUser()"&gt;&lt;span class="fa-sharp fa-solid fa-right-to-bracket"&gt;&lt;/span&gt; Logout&lt;/a&gt;';
     } else {
-        // User is not logged in, update the UI accordingly
+        // if user is not logged in
         loginLink.innerHTML = '&lt;a class="nav-link" href="#" data-toggle="modal" data-target="#loginForm" onclick="toggleLogin()"&gt;&lt;span class="fa-sharp fa-solid fa-right-to-bracket"&gt;&lt;/span&gt; Login&lt;/a&gt;';
     }
 }
 &nbsp;
 &nbsp;
 function toggleLogin() {
-    // Check if the user is logged in
+    // check if user is logged in
     const user = JSON.parse(localStorage.getItem('user'));
 &nbsp;
     <span class="missing-if-branch" title="if path not taken" >I</span>if (user) {
-        // User is logged in, initiate logout
+        // show logout
 <span class="cstat-no" title="statement not covered" >        logoutUser();</span>
     } else {
-        // User is not logged in, open the login modal
+        // show login modal
         $('#loginForm').modal('show');
     }
 }
 &nbsp;
 function <span class="fstat-no" title="function not covered" >logoutUser(</span>) {
-    // Clear user data from localStorage
+    // removing
 <span class="cstat-no" title="statement not covered" >    localStorage.removeItem('user');</span>
 &nbsp;
-    // Hide the "Add Review" button
+    // hiding of add review button
     const addReviewButton = <span class="cstat-no" title="statement not covered" >document.getElementById('addReviewButton');</span>
 <span class="cstat-no" title="statement not covered" >    if (addReviewButton) {</span>
 <span class="cstat-no" title="statement not covered" >        addReviewButton.style.display = 'none';</span>
     }
 &nbsp;
-    // Change the "Logout" link back to "Login" and bind the login function
+    // change logout back to login
     const loginLink = <span class="cstat-no" title="statement not covered" >document.getElementById('navUser');</span>
     
 <span class="cstat-no" title="statement not covered" >    if (loginLink) {</span>
@@ -429,7 +429,7 @@ function <span class="fstat-no" title="function not covered" >logoutUser(</span>
 &nbsp;
 &nbsp;
 &nbsp;
-    // Optionally, display a logout message or update the UI
+    
 <span class="cstat-no" title="statement not covered" >    alert('Logout successful');</span>
 <span class="cstat-no" title="statement not covered" >    window.location.reload();</span>
 }
@@ -442,7 +442,7 @@ checkLoggedIn();</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-01T04:46:34.742Z
+                at 2024-02-01T07:00:42.613Z
             </div>
         <script src="prettify.js"></script>
         <script>

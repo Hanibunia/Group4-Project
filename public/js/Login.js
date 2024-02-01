@@ -1,22 +1,22 @@
 async function loginUser() {
-    // Get user input values
+    // getting user inputs
     var email = document.getElementById('loginEmail').value;
     var password = document.getElementById('loginPassword').value;
 
-    // Perform validation
+    // validation
     if (!email.includes('@') || password.length < 6) {
         alert('Invalid email or password (minimum 6 characters).');
         return;
     }
 
-    // Prepare data for the backend
+    // calling data
     var data = {
         email: email,
         password: password
     };
 
     try {
-        // Make a POST request to the backend
+        // POST to backend
         const response = await fetch('/login', {
             method: 'POST',
             headers: {
@@ -25,7 +25,7 @@ async function loginUser() {
             body: JSON.stringify(data)
         });
 
-        // Parse the JSON response
+        // parse
         const result = await response.json();
 
         if (response.ok) {
@@ -33,20 +33,20 @@ async function loginUser() {
 
             const userData = {
                 email: email,
-                // You can include other user-related information if needed
+                
             };
 
-            // Store user data in localStorage
+            // user data in localStorage
             localStorage.setItem('user', JSON.stringify(userData));
 
-            // Change the "Login" link to "Logout" and bind the logout function
+            // login function
             const loginLink = document.getElementById('navUser');
             loginLink.innerHTML = '<a class="nav-link" href="#" onclick="logoutUser()"><span class="fa-sharp fa-solid fa-right-to-bracket"></span> Logout</a>';
 
-            // Close the login modal or redirect the user
+            // closing login modal
             $('#loginForm').modal('hide');
 
-            // Update the UI based on the login status
+            
             checkLoggedIn();
 
             window.location.reload();
@@ -63,51 +63,51 @@ async function loginUser() {
 }
 
 function checkLoggedIn() {
-    // Check if the user is logged in
+    // checkin if user is logged in
     const user = JSON.parse(localStorage.getItem('user'));
 
-    // Show/hide the "Add Review" button based on the login status
+    // show or hide base on login status
     const addReviewButton = document.getElementById('addReviewButton');
     if (addReviewButton) {
         addReviewButton.style.display = user ? 'block' : 'none';
     }
 
-    // Update the login/logout link
+    // update of ui
     const loginLink = document.getElementById('navUser');
     if (user) {
-        // User is logged in, update the UI accordingly
+        // if user is logged in
         loginLink.innerHTML = '<a class="nav-link" href="#"  id="logout" onclick="logoutUser()"><span class="fa-sharp fa-solid fa-right-to-bracket"></span> Logout</a>';
     } else {
-        // User is not logged in, update the UI accordingly
+        // if user is not logged in
         loginLink.innerHTML = '<a class="nav-link" href="#" data-toggle="modal" data-target="#loginForm" onclick="toggleLogin()"><span class="fa-sharp fa-solid fa-right-to-bracket"></span> Login</a>';
     }
 }
 
 
 function toggleLogin() {
-    // Check if the user is logged in
+    // check if user is logged in
     const user = JSON.parse(localStorage.getItem('user'));
 
     if (user) {
-        // User is logged in, initiate logout
+        // show logout
         logoutUser();
     } else {
-        // User is not logged in, open the login modal
+        // show login modal
         $('#loginForm').modal('show');
     }
 }
 
 function logoutUser() {
-    // Clear user data from localStorage
+    // removing
     localStorage.removeItem('user');
 
-    // Hide the "Add Review" button
+    // hiding of add review button
     const addReviewButton = document.getElementById('addReviewButton');
     if (addReviewButton) {
         addReviewButton.style.display = 'none';
     }
 
-    // Change the "Logout" link back to "Login" and bind the login function
+    // change logout back to login
     const loginLink = document.getElementById('navUser');
     
     if (loginLink) {
@@ -116,7 +116,7 @@ function logoutUser() {
 
 
 
-    // Optionally, display a logout message or update the UI
+    
     alert('Logout successful');
     window.location.reload();
 }

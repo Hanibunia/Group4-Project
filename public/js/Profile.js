@@ -4,19 +4,20 @@ async function updateEmail() {
 
     try {
         await updateUserEmail(currentEmail, newEmail);
-        // Provide success feedback to the user in the UI (e.g., display a success message)
-        console.log('Email updated successfully!');
+        // success msg
+        
     } catch (error) {
-        // Provide error feedback to the user in the UI (e.g., display an error message)
+        // error msg
         console.error('Failed to update email:', error.message);
     } finally {
-        // Close the modal regardless of success or failure
+        // closemodal
         $('#updateEmailModal').modal('hide');
     }
 }
 
 async function updateUserEmail(currentEmail, newEmail) {
     try {
+        //updateUserEmail function
         const response = await fetch('/updateEmail', {
             method: 'PUT',
             headers: {
@@ -28,18 +29,21 @@ async function updateUserEmail(currentEmail, newEmail) {
             }),
         });
 
+        //throw error if response is not ok
         if (!response.ok) {
             const errorMessage = await response.text();
             throw new Error(errorMessage || response.statusText);
         }
 
-        // Update the email in the user data in localStorage
+        // updating of email in localStorage
         let user = JSON.parse(localStorage.getItem('user'));
 
         if (user) {
+            // if user data exists
             user = { ...user, email: newEmail };
             localStorage.setItem('user', JSON.stringify(user));
         } else {
+            // if user data do not exists
             console.error('User data not found in localStorage.');
         }
     } catch (error) {

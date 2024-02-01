@@ -336,31 +336,32 @@
 <a name='L271'></a><a href='#L271'>271</a>
 <a name='L272'></a><a href='#L272'>272</a>
 <a name='L273'></a><a href='#L273'>273</a>
-<a name='L274'></a><a href='#L274'>274</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6812x</span>
-<span class="cline-any cline-yes">6812x</span>
+<span class="cline-any cline-yes">7124x</span>
+<span class="cline-any cline-yes">7124x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6812x</span>
-<span class="cline-any cline-yes">34060x</span>
-<span class="cline-any cline-yes">34060x</span>
-<span class="cline-any cline-yes">34060x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6812x</span>
+<span class="cline-any cline-yes">7124x</span>
+<span class="cline-any cline-yes">35620x</span>
+<span class="cline-any cline-yes">35620x</span>
+<span class="cline-any cline-yes">35620x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6812x</span>
-<span class="cline-any cline-yes">6812x</span>
-<span class="cline-any cline-yes">6812x</span>
+<span class="cline-any cline-yes">7124x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6812x</span>
-<span class="cline-any cline-yes">6812x</span>
-<span class="cline-any cline-yes">6812x</span>
+<span class="cline-any cline-yes">7124x</span>
+<span class="cline-any cline-yes">7124x</span>
+<span class="cline-any cline-yes">7124x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7124x</span>
+<span class="cline-any cline-yes">7124x</span>
+<span class="cline-any cline-yes">7124x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -576,6 +577,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -842,17 +844,18 @@ function openUpdateReviewModal(review) {
     $('#updateReviewModal').modal('show');
 }
 function <span class="fstat-no" title="function not covered" >confirmAndDeleteReview(</span>{ reviewId, email }) {
-    // Show a confirmation dialog to the user
+    // show popout
     const isConfirmed = <span class="cstat-no" title="statement not covered" >confirm("Are you sure you want to delete this review?");</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (isConfirmed) {</span>
-        // If user confirms, you can make an API request to delete the review
-        // Replace the URL and method with your actual API endpoint and method (e.g., POST, DELETE)
+        // if user confirms
+     
 <span class="cstat-no" title="statement not covered" >        fetch('/deleteReview', {</span>
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
+            // user have to input both email and reviewId to delete review
             body: JSON.stringify({
                 email,
                 reviewId
@@ -860,10 +863,10 @@ function <span class="fstat-no" title="function not covered" >confirmAndDeleteRe
         })
             .then(<span class="fstat-no" title="function not covered" >re</span>sponse =&gt; {
 <span class="cstat-no" title="statement not covered" >                if (response.ok) {</span>
-                    // Review deleted successfully, you can update the UI or handle it as needed
+                    // review deleted successfully
 <span class="cstat-no" title="statement not covered" >                    console.log('Review deleted successfully');</span>
 &nbsp;
-                    // Update the UI by removing the deleted review element from the DOM
+                    // update the UI by removing the deleted review
                     const deletedReviewElement = <span class="cstat-no" title="statement not covered" >document.getElementById(`review-${reviewId}`);</span>
 <span class="cstat-no" title="statement not covered" >                    if (deletedReviewElement) {</span>
 <span class="cstat-no" title="statement not covered" >                        deletedReviewElement.remove();</span>
@@ -889,7 +892,7 @@ function <span class="fstat-no" title="function not covered" >confirmAndDeleteRe
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-01T04:46:34.742Z
+                at 2024-02-01T07:00:42.613Z
             </div>
         <script src="prettify.js"></script>
         <script>

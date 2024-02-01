@@ -28,18 +28,18 @@ describe('Clement Frontend Check', function () {
     it('should show error for invalid login credentials', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
 
-        // Navigate to the login page
+        // navigate to the login page
         await driver.get(baseUrl);
 
-        // Click on the link to open the login modal
+        // open the login modal
         const loginLink = await driver.findElement(By.id('navUser'));
         await loginLink.click();
 
-        // Wait for the login modal to be visible
+        // wait login modal to be visible
         const loginModal = await driver.findElement(By.id('loginForm'));
         await driver.wait(until.elementIsVisible(loginModal), 5000);
 
-        // Enter invalid login credentials
+        // key invalid login credentials
         const emailInput = await driver.findElement(By.id('loginEmail'));
         const passwordInput = await driver.findElement(By.id('loginPassword'));
         const actualLoginButton = await driver.findElement(By.id('LoginButton'));
@@ -47,25 +47,23 @@ describe('Clement Frontend Check', function () {
         await emailInput.sendKeys('invalidemail');
         await passwordInput.sendKeys('short');
 
-        // Click the login button
+        // wait for login button to click
         await actualLoginButton.click();
 
-        // Wait for the error alert to be present
-        // Wait for the error alert to be present
         try {
             await driver.wait(until.alertIsPresent(), 5000);
 
-            // Switch to the alert and get its text
+            // switch to alert and get text
             const alert = await driver.switchTo().alert();
             const alertText = await alert.getText();
 
-            // Check if the alert message is correct
+            // see if alert msg is correct
             expect(alertText).to.equal('Invalid email or password (minimum 6 characters).');
 
-            // Dismiss the alert
+            // dismiss alert
             await alert.dismiss();
         } catch (error) {
-            // Handle the case when no alert is present
+            // when no alert is present
             console.error('No alert found:', error);
         }
 
@@ -77,11 +75,11 @@ describe('Clement Frontend Check', function () {
         this.timeout(100000);
         await driver.get(baseUrl);
 
-        // Click on the link to open the login modal
+        //  open login modal
         const loginLink = await driver.findElement(By.id('navUser'));
         await loginLink.click();
 
-        // Wait for the login modal to be visible
+        // wait for the login modal to be visible
         const loginModal = await driver.findElement(By.id('loginForm'));
         await driver.wait(until.elementIsVisible(loginModal), 5000);
 
@@ -89,18 +87,18 @@ describe('Clement Frontend Check', function () {
         const passwordInput = await driver.findElement(By.id('loginPassword'));
         const actualLoginButton = await driver.findElement(By.id('LoginButton'));
 
-        // Enter login credentials
+        // key login credentials
         await emailInput.sendKeys('abc@gmail.com');
         await passwordInput.sendKeys('hanyi909090');
         console.log('Before clicking login button');
 
-        // Click the login button
+        // click login button
         await actualLoginButton.click();
         console.log('After clicking login button');
 
         await driver.navigate().refresh();
 
-        // Wait for the login modal to close
+        // wait login modal close
         await driver.wait(until.stalenessOf(loginModal), 10000);
         console.log('Login modal closed');
 
@@ -117,7 +115,7 @@ describe('Clement Frontend Check', function () {
 
         await driver.get(baseUrl);
 
-        // Assuming there is at least one restaurant card on the page
+        // at least one restaurant card on the page
         const restaurantCard = await driver.findElement(By.className('card'));
 
         // Get the restaurant ID from the card's data attribute or any other attribute that uniquely identifies it
@@ -133,27 +131,27 @@ describe('Clement Frontend Check', function () {
         const baseUrl = 'http://localhost:' + server.address().port  + '/instrumented';
         await driver.get(baseUrl);
 
-        // Assuming there is at least one restaurant card on the page
+        // assuming there is at least one restaurant card on the page
         const restaurantCard = await driver.findElement(By.className('card'));
 
-        // Click on the restaurant card
+        // click on the restaurant card
         await restaurantCard.click();
         const reviewsModal = await driver.findElement(By.id('reviewsModal'));
         await driver.wait(until.elementIsVisible(reviewsModal), 5000);
 
-        // Find the container within reviewsModal (if necessary)
+        // find the container
         const reviewsContainer = await reviewsModal.findElement(By.className('review-container'));
 
-        // Assuming there is a delete review button on the page
+        // assuming there is a delete review button on the page
         const deleteIcon = await reviewsContainer.findElement(By.css('.fas.fa-trash-alt'));
 
-        // Click on the delete review button
+        // click on the delete review button
         await deleteIcon.click();
 
-        // Wait for the confirmation dialog to appear
+        // wait for the confirmation dialog to appear
         const confirmDialog = await driver.switchTo().alert();
 
-        // Accept the confirmation dialog
+        // accept the confirmation dialog
         await confirmDialog.accept();
         await driver.navigate().refresh();
 
@@ -161,26 +159,26 @@ describe('Clement Frontend Check', function () {
 
     });
     it('should update email successfully', async function () {
-        // Assuming the user is already logged in (you can reuse the login code or use a beforeEach hook)
+        // assuming the user is already logged in (you can reuse the login code or use a beforeEach hook)
         this.timeout(100000)
 
-        // Click on the link to open the profile modal or page where email can be updated
+        // click on the link to open the profile modal or page where email can be updated
         const profileLink = await driver.findElement(By.id('navMyProfile'));
         await profileLink.click();
 
-        // Wait for the profile modal or page to be visible
+        // wait for the profile modal or page to be visible
         const myProfileModal = await driver.findElement(By.id('myProfileModal'));
         await driver.wait(until.elementIsVisible(myProfileModal), 5000);
 
-        // Click the "Change Email" button to open the updateEmailModal
+        // click the "Change Email" button to open the updateEmailModal
         const changeEmailButton = await driver.findElement(By.xpath('//button[contains(text(),"Change Email")]'));
         await changeEmailButton.click();
 
-        // Wait for the updateEmailModal to be visible
+        // wait for the updateEmailModal to be visible
         const updateEmailModal = await driver.findElement(By.id('updateEmailModal'));
         await driver.wait(until.elementIsVisible(updateEmailModal), 5000);
 
-        // Find the email input fields and update the email
+        // find the email input fields and update the email
         const currentEmailInput = await driver.findElement(By.id('currentEmail'));
         const newEmailInput = await driver.findElement(By.id('newEmail'));
 
@@ -190,14 +188,14 @@ describe('Clement Frontend Check', function () {
         await newEmailInput.clear(); // Clear the existing new email
         await newEmailInput.sendKeys('newemail@gmail.com'); // Enter the new email
 
-        // Click the "Update Email" button in the modal
+        // click the "Update Email" button in the modal
         const updateEmailButton = await driver.findElement(By.xpath('//button[contains(text(),"Update Email")]'));
         await updateEmailButton.click();
 
-        // Wait for the profile modal or page to be visible again
+        // wait for the profile modal or page to be visible again
         await driver.wait(until.elementIsVisible(myProfileModal), 5000);
 
-        // Expect that the myProfileModal element exists
+        // expect that the myProfileModal element exists
         expect(myProfileModal).to.exist;
     });
 });

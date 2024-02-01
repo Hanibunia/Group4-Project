@@ -231,17 +231,18 @@ function openUpdateReviewModal(review) {
     $('#updateReviewModal').modal('show');
 }
 function confirmAndDeleteReview({ reviewId, email }) {
-    // Show a confirmation dialog to the user
+    // show popout
     const isConfirmed = confirm("Are you sure you want to delete this review?");
 
     if (isConfirmed) {
-        // If user confirms, you can make an API request to delete the review
-        // Replace the URL and method with your actual API endpoint and method (e.g., POST, DELETE)
+        // if user confirms
+     
         fetch('/deleteReview', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
+            // user have to input both email and reviewId to delete review
             body: JSON.stringify({
                 email,
                 reviewId
@@ -249,26 +250,28 @@ function confirmAndDeleteReview({ reviewId, email }) {
         })
             .then(response => {
                 if (response.ok) {
-                    // Review deleted successfully, you can update the UI or handle it as needed
+                    // review deleted successfully
                     console.log('Review deleted successfully');
 
-                    // Update the UI by removing the deleted review element from the DOM
+                    // update the UI by removing the deleted review
                     const deletedReviewElement = document.getElementById(`review-${reviewId}`);
                     if (deletedReviewElement) {
                         deletedReviewElement.remove();
 
                     }
                 } else {
-                    // Handle error response from the server
+                    
                     console.error('Failed to delete review');
-                } window.location.reload();
+                } 
+                //refresh page to check after deletion of review
+                window.location.reload();
             })
             .catch(error => {
-                // Handle network errors or other issues
+                
                 console.error('Error deleting review:', error);
             });
     } else {
-        // User canceled the deletion
+        // user canceled the deletion
         console.log('Deletion canceled');
     }
 }
