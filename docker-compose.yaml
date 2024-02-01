@@ -6,3 +6,9 @@ services:
       dockerfile: Dockerfile
     image: hanibunia/arkfood-img:v6
     container_name: rms-docker-container
+    clement-rms: 
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: 2204453a/rms-docker-img:latest
+    container_name: rms-docker-container
