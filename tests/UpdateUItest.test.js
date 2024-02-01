@@ -78,7 +78,6 @@ describe('Testing Hanyi UpdateReview Frontend', function () {
     });
     it('Should update a review through the "Update Review" modal', async function () {
         const baseUrl = 'http://localhost:' + server.address().port + '/instrumented';
-        this.timeout(100000);
         await driver.get(baseUrl);
 
         // Assuming there is at least one restaurant card on the page

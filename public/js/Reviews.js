@@ -81,27 +81,27 @@ function showReviews(restaurant) {
                         reviewContainer.appendChild(ratingStars);
 
                         // Check if the user is logged in (check for the existence of 'user' in session storage)
-                      // Check if the user is logged in
+                        // Check if the user is logged in
                         const loggedInUser = JSON.parse(localStorage.getItem('user'));
-                        
+
                         // Check if the review was created by the logged-in user
                         if (loggedInUser && loggedInUser.email === review.email) {
                             // User is logged in and the review belongs to them, show the "Edit" icon
                             const editIcon = createEditIcon();
                             editIcon.addEventListener('click', () => openUpdateReviewModal(review));
-                        
+
                             // If user is logged in, show the "Delete" icon
                             const deleteIcon = createDeleteIcon();
                             deleteIcon.addEventListener('click', () => confirmAndDeleteReview({ reviewId: review.reviewId, email: review.email }));
-                        
+
                             // Create a container div for the icons
                             const iconsContainer = document.createElement('div');
                             iconsContainer.classList.add('icons-container');
-                        
+
                             // Append the icons to the container
                             iconsContainer.appendChild(editIcon);
                             iconsContainer.appendChild(deleteIcon);
-                        
+
                             // Append the container to the reviewContainer
                             reviewContainer.appendChild(iconsContainer);
                         }
@@ -230,45 +230,45 @@ function openUpdateReviewModal(review) {
     // Open the update review modal
     $('#updateReviewModal').modal('show');
 }
-// function confirmAndDeleteReview({ reviewId, email }) {
-//     // Show a confirmation dialog to the user
-//     const isConfirmed = confirm("Are you sure you want to delete this review?");
-  
-//     if (isConfirmed) {
-//         // If user confirms, you can make an API request to delete the review
-//         // Replace the URL and method with your actual API endpoint and method (e.g., POST, DELETE)
-//         fetch('/deleteReview', {
-//             method: 'DELETE',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 email,
-//                 reviewId
-//             }),
-//         })
-//         .then(response => {
-//             if (response.ok) {
-//                 // Review deleted successfully, you can update the UI or handle it as needed
-//                 console.log('Review deleted successfully');
+function confirmAndDeleteReview({ reviewId, email }) {
+    // Show a confirmation dialog to the user
+    const isConfirmed = confirm("Are you sure you want to delete this review?");
 
-//                 // Update the UI by removing the deleted review element from the DOM
-//                 const deletedReviewElement = document.getElementById(`review-${reviewId}`);
-//                 if (deletedReviewElement) {
-//                     deletedReviewElement.remove();
-                    
-//                 }
-//             } else {
-//                 // Handle error response from the server
-//                 console.error('Failed to delete review');
-//             }window.location.reload();
-//         })
-//         .catch(error => {
-//             // Handle network errors or other issues
-//             console.error('Error deleting review:', error);
-//         });
-//     } else {
-//         // User canceled the deletion
-//         console.log('Deletion canceled');
-//     }
-// }
+    if (isConfirmed) {
+        // If user confirms, you can make an API request to delete the review
+        // Replace the URL and method with your actual API endpoint and method (e.g., POST, DELETE)
+        fetch('/deleteReview', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                reviewId
+            }),
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Review deleted successfully, you can update the UI or handle it as needed
+                    console.log('Review deleted successfully');
+
+                    // Update the UI by removing the deleted review element from the DOM
+                    const deletedReviewElement = document.getElementById(`review-${reviewId}`);
+                    if (deletedReviewElement) {
+                        deletedReviewElement.remove();
+
+                    }
+                } else {
+                    // Handle error response from the server
+                    console.error('Failed to delete review');
+                } window.location.reload();
+            })
+            .catch(error => {
+                // Handle network errors or other issues
+                console.error('Error deleting review:', error);
+            });
+    } else {
+        // User canceled the deletion
+        console.log('Deletion canceled');
+    }
+}
