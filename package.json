@@ -7,7 +7,6 @@
     "include": [
       "utils/UserUtil.js",
       "utils/ReviewUtil.js"
-      
     ],
     "exclude": [],
     "reporter": [
