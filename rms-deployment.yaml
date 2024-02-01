@@ -13,7 +13,7 @@ spec: # defines the desired state of the Deployment.
         app: rms-docker-img
     spec: # specifies the container(s) to run
       containers: 
-      - name: rms-container
+      - name: clement-rms-container
         image: 2204453a/rms-docker-img:latest
         ports: 
         - containerPort: 5050 # specifies the port that the application listens on

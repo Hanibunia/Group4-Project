@@ -1,14 +1,15 @@
 version: '3'
-services: 
-  hanyi-rms: 
-    build: 
+services:
+  hanyi-rms:
+    build:
       context: .
       dockerfile: Dockerfile
     image: hanibunia/arkfood-img:v6
-    container_name: rms-docker-container
-    clement-rms: 
-    build: 
+    container_name: hanyi-rms-container  # Unique container name for hanyi-rms service
+
+  clement-rms:
+    build:
       context: .
       dockerfile: Dockerfile
     image: 2204453a/rms-docker-img:latest
-    container_name: rms-docker-container
+    container_name: clement-rms-container 

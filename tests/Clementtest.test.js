@@ -8,6 +8,8 @@ const fs = require('fs').promises;
 const chromeOptions = new chrome.Options();
 chromeOptions.addArguments('--headless');
 chromeOptions.addArguments('--log-level=3')
+//const driver = new Builder().forBrowser('MicrosoftEdge').build();
+//const edge = require('selenium-webdriver/edge');
 
 const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
 var server;
