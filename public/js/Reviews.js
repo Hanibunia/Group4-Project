@@ -52,7 +52,7 @@ function showReviews(restaurant) {
 
                         // Create an image element for the blank avatar
                         const avatarImg = document.createElement('img');
-                        avatarImg.src = './images/blank.jpg';
+                        avatarImg.src = './images/blank-avatar.png';
                         avatarImg.alt = 'Blank Avatar';
                         profilePicture.appendChild(avatarImg);
 
