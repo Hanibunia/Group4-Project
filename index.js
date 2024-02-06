@@ -3,7 +3,7 @@ var bodyParser = require("body-parser");
 const fs = require('fs')
 const path =require('path')
 var app = express();
-const logger = require('./logger');
+// const logger = require('./logger');
 const morgan = require('morgan');
 
 const PORT = process.env.PORT || 5050
@@ -44,8 +44,8 @@ app.get('/', (req, res) => {
 })
 const server = app.listen(PORT, function () {
     console.log(`Demo project at: ${PORT}!`);
-    logger.info(`Demo project at: ${PORT}!`);
-    logger.error(`Example or error log`)
+    // logger.info(`Demo project at: ${PORT}!`);
+    // logger.error(`Example or error log`)
 });
 
 module.exports = { app, server }

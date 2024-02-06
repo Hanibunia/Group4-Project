@@ -155,14 +155,14 @@ describe('Update Review Function', () => {
         {
             name: 'Should update a review successfully',
             email: 'abc@gmail.com',
-            reviewId: "11d992a5-0d05-4601-8a95-c1b064d9e057",
+            reviewId: "b2da1024-4344-4b1b-a7d6-8d2d3effddd1",
             reviewText: 'Test',
             rating: 5,
             restaurantId: 1,
 
             expectedStatus: 200,
             expectedResponse: {
-                reviewId: "11d992a5-0d05-4601-8a95-c1b064d9e057",
+                reviewId: "b2da1024-4344-4b1b-a7d6-8d2d3effddd1",
                 email: 'abc@gmail.com',
                 reviewText: 'Test',
                 rating: 5,
